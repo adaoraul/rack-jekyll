@@ -28,14 +28,19 @@ Heroku:
 
 You need to generate pages and git-add pages and git-commit before you deploy your jekyll to Heroku
 
-1) cd to your jekyll directory
-2) add config.ru (see example above)
-3) build pages, type: jekyll
-4) git init && git add .
-5) git commit -m "first heroku app"
-6) heroku create
-7) git push heroku master
+    1) cd to your jekyll directory
 
+    2) add config.ru (see example above)
+    
+    3) build pages, type: jekyll
+    
+    4) git init && git add .
+    
+    5) git commit -m "first heroku app"
+    
+    6) heroku create
+    
+    7) git push heroku master
 
 ## TODO
 
