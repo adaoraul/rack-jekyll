@@ -5,6 +5,7 @@ Transform your Jekyll app into Rack application
 
 You can run it with rackup and shotgun.
 
+Demo: [http://bry4n.heroku.com/](http://bry4n.heroku.com/)
 
 ### How to use it?
 
@@ -15,9 +16,9 @@ Copy this and put in config.ru in your jekyll's root directory.
 
 config.ru:
 
-  require "rack/jekyll"
+    require "rack/jekyll"
 
-  run Rack::Jekyll.new
+    run Rack::Jekyll.new
 
 
 That's it.
