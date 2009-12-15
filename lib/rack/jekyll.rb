@@ -8,6 +8,9 @@ module Rack
     def initialize(opts = {})
       @path = opts[:path].nil? ? "_site" : opts[:path]
       @files = Dir[@path + "/**/*"].inspect
+      if Dir[@path + "/**/*"].empty?
+        system("jekyll")
+      end
     end
     
     def call(env)
