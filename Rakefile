@@ -15,3 +15,9 @@ task :install do
   sh "sudo gem install rack-jekyll-0.1.gem"
 end
 
+desc "Push to Gemcutter"
+namespace :gem do
+  task :push do
+    sh "gem push rack-jekyll-0.1.gem"
+  end
+end
