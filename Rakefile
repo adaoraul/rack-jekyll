@@ -2,7 +2,7 @@ task :default => :test
 
 desc "Run all tests"
 task :test do
-  puts "To do here..."
+  sh "bacon -q -a"
 end
 
 desc "Build gem"

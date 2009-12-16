@@ -3,7 +3,7 @@ Gem::Specification.new do |s|
  s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
  
  s.name    	= 'rack-jekyll'
- s.version	= '0.1'
+ s.version	= '0.2'
  s.description	= "Transform your jekyll based app into a Rack application"
  s.summary	= "rack-jekyll"
  
@@ -14,6 +14,7 @@ Gem::Specification.new do |s|
 			README.markdown
 			LICENSE
 			lib/rack/jekyll.rb
+                        lib/rack/jekyll/test.rb
 		  ]
  
  s.extra_rdoc_files	= %w[README.markdown]
@@ -24,5 +25,6 @@ Gem::Specification.new do |s|
  s.rubygems_version = '1.3.1'
  s.add_dependency('jekyll')
  s.add_dependency('rack')
+ s.add_development_dependency('bacon')
  s.platform = Gem::Platform::RUBY
 end
