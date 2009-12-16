@@ -1,15 +1,15 @@
 Rack-Jekyll
 ===========
 
-Transform your Jekyll app into Rack application
+Transform your [Jekyll](http://github.com/mojombo/jekyll) app into [Rack](http://github.com/rack/rack) application
 
-You can run it with rackup and shotgun.
+You can run it with rackup and [shotgun](http://github.com/rtomakyo/shotgun).
 
-Demo: [http://bry4n.heroku.com/](http://bry4n.heroku.com/)
+Heroku Demo: [http://bry4n.heroku.com/](http://bry4n.heroku.com/)
 
 ### How to use it?
 
-*config.ru* is required in order to run with shotgun and rackup. Even you can deploy your jekyll app to Heroku!
+*config.ru* is required in order to run with shotgun and rackup. Even you can deploy your jekyll app to [Heroku!](http://www.heroku.com/)
 
 Copy this and put in config.ru in your jekyll's root directory.
 
