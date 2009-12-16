@@ -1,6 +1,6 @@
 require 'bacon'
 require 'rack/mock'
-require "lib/rack/jekyll"
+require "lib/rack/jekyll/test"
 
 def get(klass, path)
   request = Rack::MockRequest.new(klass)
