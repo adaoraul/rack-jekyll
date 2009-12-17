@@ -42,6 +42,6 @@ You need to generate pages and git-add pages and git-commit before you deploy yo
     
     7) git push heroku master
 
-## TODO
+## 404 page
 
-Rails 
+You can create a new file: `404.html` with YAML Front Matter. See my [Heroku Demo 404](http://bry4n.heroku.com/show/me/404/)

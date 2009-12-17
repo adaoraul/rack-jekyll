@@ -9,7 +9,7 @@ module Rack
       @path = opts[:path].nil? ? "_site" : opts[:path]
       @files = Dir[@path + "/**/*"].inspect
       if Dir[@path + "/**/*"].empty?
-        system("jekyll")
+        system("jekyll #{@path}")
       end
     end
     
@@ -30,7 +30,14 @@ module Rack
       else
         ext = $1 if path_info =~ /(\.\S+)$/i
         mime = Mime.mime_type(ext)
-        [404, {"Content-Type" => mime}, ["Not found"]]
+        status = 404
+        body = "Not found"
+        if ::File.exist?(@path + "/404.html")
+          status = 200
+          body = ::File.read(@path + "/404.html")
+          mime = Mime.mime_type(".html")
+        end
+        [status, {"Content-Type" => mime, "Content-Type" => body.length.to_s}, [body]]
       end
     end
 
