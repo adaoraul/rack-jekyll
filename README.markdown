@@ -34,13 +34,15 @@ You need to generate pages and git-add pages and git-commit before you deploy yo
     
     3) build pages, type: jekyll
     
-    4) git init && git add _site/*
+    4) echo "rack-jekyll" > .gems
     
-    5) git commit -m "first heroku app"
+    5) git init && git add config.ru .gems _site/*
     
-    6) heroku create
+    6) git commit -m "first heroku app"
     
-    7) git push heroku master
+    7) heroku create
+    
+    8) git push heroku master
 
 ## 404 page
 
