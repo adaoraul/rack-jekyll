@@ -24,7 +24,7 @@ config.ru:
 That's it.
 
 
-Heroku:
+Heroku's dyno is a [read-only filesystem](http://docs.heroku.com/constraints#read-only-filesystem):
 
 You need to generate pages and git-add pages and git-commit before you deploy your jekyll to Heroku
 
@@ -34,7 +34,7 @@ You need to generate pages and git-add pages and git-commit before you deploy yo
     
     3) build pages, type: jekyll
     
-    4) git init && git add .
+    4) git init && git add _site/*
     
     5) git commit -m "first heroku app"
     
