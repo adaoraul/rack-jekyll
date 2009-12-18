@@ -1,3 +1,5 @@
+require 'lib/rack/jekyll/version'
+
 task :default => :test
 
 desc "Run all tests"
@@ -13,12 +15,12 @@ end
 
 desc "Install gem"
 task :install do
-  sh "sudo gem install rack-jekyll-0.2.gem"
+  sh "sudo gem install rack-jekyll-#{Rack::Jekyll.version}.gem"
 end
 
 desc "Push to Gemcutter"
 namespace :gem do
   task :push do
-    sh "gem push rack-jekyll-0.2.gem"
+    sh "gem push rack-jekyll-#{Rack::Jekyll.version}.gem"
   end
 end

@@ -9,7 +9,13 @@ module Rack
       @path = opts[:path].nil? ? "_site" : opts[:path]
       @files = Dir[@path + "/**/*"].inspect
       if Dir[@path + "/**/*"].empty?
-        system("jekyll #{@path}")
+        begin
+          require "jekyll"
+          options = ::Jekyll.configuration(opts)
+          site = ::Jekyll::Site.new(options)
+          site.process
+        rescue LoadError => boom
+        end
       end
     end
     

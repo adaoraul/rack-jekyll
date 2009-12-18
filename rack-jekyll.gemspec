@@ -1,9 +1,11 @@
+require "lib/rack/jekyll/version"
+
 Gem::Specification.new do |s|
  s.specification_version = 1 if s.respond_to? :specification_version=
  s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
  
  s.name    	= 'rack-jekyll'
- s.version	= '0.2'
+ s.version	= Rack::Jekyll.version
  s.description	= "Transform your jekyll based app into a Rack application"
  s.summary	= "rack-jekyll"
  
