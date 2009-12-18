@@ -9,12 +9,8 @@ end
 
 describe "Jekyll to Rack" do
   
-  rackup = File.dirname(__FILE__) + "/config.ru"
-  jekyll = Rack::Jekyll::Test.new(rackup)
+  jekyll = Rack::Jekyll::Test.new
   
-  it "knows the config file" do
-    jekyll.config.should.equal rackup
-  end
   
   it "should be 200 and not 404" do
     res = get(jekyll,"/")

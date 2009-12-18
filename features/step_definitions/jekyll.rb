@@ -1,10 +1,9 @@
 require "lib/rack/jekyll/test"
 require "rack/mock"
 
-Given /^I haven entered the path (.*)$/ do |p|
-  @config = File.dirname(__FILE__) + "/config.ru"
-  @jekyll = Rack::Jekyll::Test.new(@config)
-  @path = p
+Given /^I haven entered the path (.*)$/ do |path|
+  @jekyll = Rack::Jekyll::Test.new
+  @path = path
 end
 
 When /^I request a page$/ do
