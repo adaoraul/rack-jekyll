@@ -16,30 +16,27 @@ module Rack
     def call(env)
       request = Request.new(env)
       path_info = request.path_info
-      ext = ''
       if @files.include?(path_info)
         if path_info =~ /(\/?)$/
           if path_info !~ /\.(css|js|jpe?g|gif|png|mov|mp3)$/i
             path_info += $1.nil? ? "/index.html" : "index.html"
           end
-          ext = $1 if path_info =~ /(\.\S+)$/i 
         end
-        mime = Mime.mime_type(ext)
-        body = ::File.read(::File.expand_path(@path + path_info))
+        mime = mime(path_info)
+        body = content(::File.expand_path(@path + path_info))
         [200, {"Content-Type" => mime, "Content-length" => body.length.to_s}, [body]]
       else
-        ext = $1 if path_info =~ /(\.\S+)$/i
-        mime = Mime.mime_type(ext)
-        status = 404
-        body = "Not found"
-        if ::File.exist?(@path + "/404.html")
-          status = 200
-          body = ::File.read(@path + "/404.html")
-          mime = Mime.mime_type(".html")
-        end
+        status, body, path_info = ::File.exist? ? [200,content(@path+"/404.html"),"404.html"] : [404,"Not found","404,html"]
+        mime = mime(path_info)
         [status, {"Content-Type" => mime, "Content-Type" => body.length.to_s}, [body]]
       end
     end
-
+    def content(file)
+      ::File.read(file)
+    end
+    def mime(path_info)
+      ext = $1 if path_info =~ /(\.\S+)$/
+      Mime.mime_type((ext.nil? ? ".html" : ext))
+    end
   end
 end
