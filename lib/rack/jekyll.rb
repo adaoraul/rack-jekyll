@@ -26,7 +26,7 @@ module Rack
         body = content(::File.expand_path(@path + path_info))
         [200, {"Content-Type" => mime, "Content-length" => body.length.to_s}, [body]]
       else
-        status, body, path_info = ::File.exist? ? [200,content(@path+"/404.html"),"404.html"] : [404,"Not found","404.html"]
+        status, body, path_info = ::File.exist?(@path+"/404.html") ? [200,content(@path+"/404.html"),"404.html"] : [404,"Not found","404.html"]
         mime = mime(path_info)
         [status, {"Content-Type" => mime, "Content-Type" => body.length.to_s}, [body]]
       end
