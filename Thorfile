@@ -35,12 +35,12 @@ class Git < Thor
   
   desc "commit","git-commit"
   def commit
-    system("git commit")
+    system("git commit -mF")
   end
 
   desc "pull","git-pull"
   def pull
-    system("git pull")
+    system("git pull origin master")
   end
 
 end
