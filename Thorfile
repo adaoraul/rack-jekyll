@@ -35,7 +35,7 @@ class Git < Thor
   
   desc "commit","git-commit"
   def commit
-    system("git commit -mF")
+    system("git commit")
   end
 
   desc "pull","git-pull"
