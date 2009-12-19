@@ -3,7 +3,7 @@ Rack-Jekyll
 
 Transform your [Jekyll](http://github.com/mojombo/jekyll) app into [Rack](http://github.com/rack/rack) application
 
-You can run it with rackup and [shotgun](http://github.com/rtomakyo/shotgun).
+You can run it with rackup and [shotgun](http://github.com/rtomakyo/shotgun), [unicorn](http://github.com/defunkt/unicorn).
 
 Heroku Demo: [http://bry4n.heroku.com/](http://bry4n.heroku.com/)
 
@@ -24,7 +24,7 @@ config.ru:
 That's it.
 
 
-Heroku's dyno is a [read-only filesystem](http://docs.heroku.com/constraints#read-only-filesystem):
+Heroku is a [read-only filesystem](http://docs.heroku.com/constraints#read-only-filesystem):
 
 You need to generate pages and git-add pages and git-commit before you deploy your jekyll to Heroku
 
