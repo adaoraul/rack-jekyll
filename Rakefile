@@ -19,8 +19,11 @@ task :install do
 end
 
 desc "Push to Gemcutter"
-namespace :gem do
-  task :push do
-    sh "gem push rack-jekyll-#{Rack::Jekyll.version}.gem"
-  end
+task :push do
+  sh "gem push rack-jekyll-#{Rack::Jekyll.version}.gem"
+end
+
+desc "Clean up gem"
+task :clean do
+  sh "rm *.gem"
 end
