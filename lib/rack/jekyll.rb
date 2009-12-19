@@ -8,6 +8,7 @@ module Rack
     def initialize(opts = {})
       @path = opts[:path].nil? ? "_site" : opts[:path]
       @files = Dir[@path + "/**/*"].inspect
+      @mimes = Rack::Mime::MIME_TYPES.reject { /\.html?/i }.map {|k,v| /(#{k.gsub(/\./,'\.')})$/i }
       if Dir[@path + "/**/*"].empty?
         begin
           require "jekyll"
@@ -24,7 +25,7 @@ module Rack
       path_info = request.path_info
       if @files.include?(path_info)
         if path_info =~ /(\/?)$/
-          if path_info !~ /\.(css|js|jpe?g|gif|png|mov|mp3)$/i
+          if !@mimes.collect {|regex| path_info =~ regex }.empty?
             path_info += $1.nil? ? "/index.html" : "index.html"
           end
         end

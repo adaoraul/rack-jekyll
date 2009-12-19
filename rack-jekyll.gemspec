@@ -17,6 +17,7 @@ Gem::Specification.new do |s|
 			LICENSE
 			lib/rack/jekyll.rb
                         lib/rack/jekyll/test.rb
+
 		  ]
  
  s.extra_rdoc_files	= %w[README.markdown]

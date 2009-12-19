@@ -7,6 +7,7 @@ module Rack
     class Test 
       def initialize
         @files = %w{_fake/ _fake/index.html _fake/3/2/1/helloworld/index.html _fake/css/test.css _fake/js/test.js}
+        @mimes = Rack::Mime::MIME_TYPES.reject { /\.html?/i }.map {|k,v| /(#{k.gsub(/\./,'\.')})$/i }
       end
     
       def call(env)
@@ -14,22 +15,22 @@ module Rack
         path_info = "_fake" + request.path_info
         if @files.include?(path_info)
           if path_info =~ /(\/?)$/
-           if path_info !~ /\.(css|js|jpe?g|gif|png|mov|mp3)$/i
+            if !@mimes.collect {|regex| path_info =~ regex }.empty?
               path_info += $1.nil? ? "/index.html" : "index.html"
-           end
-         end
-         mime = mime(path_info)
-         body = "Jekyll/Rack"
-         [200, {"Content-Type" => mime, "Content-length" => body.length.to_s}, [body]]
+            end
+          end
+          mime = mime(path_info)
+          body = "Jekyll/Rack"
+          [200, {"Content-Type" => mime, "Content-length" => body.length.to_s}, [body]]
         else
-         status, body, path_info = [404,"Not found","404.html"]
-         mime = mime(path_info)
-         [status, {"Content-Type" => mime, "Content-Type" => body.length.to_s}, [body]]
+          status, body, path_info = [404,"Not found","404.html"]
+          mime = mime(path_info)
+          [status, {"Content-Type" => mime, "Content-Type" => body.length.to_s}, [body]]
         end
       end
       def mime(path_info)
-       ext = $1 if path_info =~ /(\.\S+)$/
-       Mime.mime_type((ext.nil? ? ".html" : ext))
+        ext = $1 if path_info =~ /(\.\S+)$/
+        Mime.mime_type((ext.nil? ? ".html" : ext))
       end
    end
   end
