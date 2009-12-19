@@ -3,8 +3,26 @@ Feature: Rack-Jekyll
   As a Jekyll
   I want to become a Rack application
 
-  Scenario: Request info
-    Given I haven entered the path /
+  Scenario: Request 200 page
+    Given I have entered the path /
     When I request a page
     Then the http status should be 200
     Then the content-type should be text/html
+    And the content-length should be 11
+    And the data should show Jekyll/Rack
+
+  Scenario: Request 404 page
+    Given I have entered the path /show/me/404/
+    When I request a page
+    Then the http status should be 404
+
+  Scenario: Request a static pages
+    Given I have entered the path /css/test.css
+    When I request a page
+    Then the http status should be 200
+    Then the content-type should be text/css
+
+    Given I have entered the path /js/test.js
+    When I request a page
+    Then the http status should be 200
+    Then the content-type should be application/javascript

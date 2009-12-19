@@ -1,7 +1,7 @@
 require "lib/rack/jekyll/test"
 require "rack/mock"
 
-Given /^I haven entered the path (.*)$/ do |path|
+Given /^I have entered the path (.*)$/ do |path|
   @jekyll = Rack::Jekyll::Test.new
   @path = path
 end
@@ -16,6 +16,14 @@ end
 
 Then /^the content\-type should be (.*)$/ do |type|
   true if @request.headers["Content-Type"] == type
+end
+
+Then /^the content\-length should be (.*)$/ do |length|
+  true if @request.headers["Content-Length"] == length
+end
+
+Then /^the data should show (.*)$/ do |body|
+  true if @request.body == body
 end
 
 def get(path)
