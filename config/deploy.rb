@@ -1,5 +1,13 @@
 set :application, "rack-jekyll"
-set :repository,  "git@github.com:bry4n/rack-jekyll.git"
+set :user, "bry4n"
+set :repository,  "git@github.com:#{user}/#{application}.git"
 
 set :scm, :git
-set :user, "bry4n"
+set :scm_username, user
+set :runner, user
+set :use_sudo, false
+set :deploy_via, :checkout
+set :branch, "master"
+set :git_shallow_clone, 1
+
+default_run_options[:pty] = true
