@@ -7,9 +7,10 @@ module Rack
     
     def initialize(opts = {})
       @path = opts[:path].nil? ? "_site" : opts[:path]
+      @auto_build = opts[:auto].nil? ? false : opts[:auto]
       @files = Dir[@path + "/**/*"].inspect
-      @mimes = Rack::Mime::MIME_TYPES.reject { /\.html?/i }.map {|k,v| /(#{k.gsub(/\./,'\.')})$/i }
-      if Dir[@path + "/**/*"].empty?
+      @mimes = Rack::Mime::MIME_TYPES.reject{|k,v|k=~%r{html?}}.map{|k,v|%r{#{k.gsub('.','\.')}$}i}
+      if Dir[@path + "/**/*"].empty? && @auto_build
         begin
           require "jekyll"
           options = ::Jekyll.configuration(opts)
@@ -25,7 +26,7 @@ module Rack
       path_info = request.path_info
       if @files.include?(path_info)
         if path_info =~ /(\/?)$/
-          if !@mimes.collect {|regex| path_info =~ regex }.empty?
+          if @mimes.collect {|regex| path_info =~ regex }.compact.empty?
             path_info += $1.nil? ? "/index.html" : "index.html"
           end
         end

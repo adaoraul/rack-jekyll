@@ -7,7 +7,7 @@ module Rack
     class Test 
       def initialize
         @files = %w{_fake/ _fake/index.html _fake/3/2/1/helloworld/index.html _fake/css/test.css _fake/js/test.js}
-        @mimes = Rack::Mime::MIME_TYPES.reject { /\.html?/i }.map {|k,v| /(#{k.gsub(/\./,'\.')})$/i }
+        @mimes = Rack::Mime::MIME_TYPES.reject{|k,v|k=~%r{html?}}.map{|k,v|%r{#{k.gsub('.','\.')}$}i}
       end
     
       def call(env)
@@ -15,7 +15,7 @@ module Rack
         path_info = "_fake" + request.path_info
         if @files.include?(path_info)
           if path_info =~ /(\/?)$/
-            if !@mimes.collect {|regex| path_info =~ regex }.empty?
+            if @mimes.collect {|regex| path_info =~ regex }.compact.empty?
               path_info += $1.nil? ? "/index.html" : "index.html"
             end
           end
