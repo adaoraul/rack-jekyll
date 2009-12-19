@@ -7,7 +7,6 @@ task :test do
   sh "bacon -q -a"
   sh "cucumber -f progress features"
 end
-
 desc "Build gem"
 task :build do
   sh "gem build rack-jekyll.gemspec"
