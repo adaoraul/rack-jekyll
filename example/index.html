@@ -1,0 +1,9 @@
+---
+layout: default
+---
+                          <h5>Blog Posts</h5>
+  			  <ul>
+    			  {% for post in site.posts %}
+      			    <li><span id="date">{{ post.date | date_to_string }}</span> &raquo; <a href="{{ post.url }}">{{ post.title }}</a></li>
+    			  {% endfor %}
+  			  </ul>

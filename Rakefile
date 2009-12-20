@@ -26,3 +26,11 @@ desc "Clean up gem"
 task :clean do
   sh "rm *.gem"
 end
+
+desc "Run demo"
+task :demo do
+  puts " ==> Starting demo: http://localhost:3000/"
+  Dir.chdir("example") do
+    sh "rackup -p 3000"
+  end
+end
