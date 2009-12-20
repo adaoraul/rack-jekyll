@@ -4,6 +4,7 @@ task :default => :test
 
 desc "Run all tests"
 task :test do
+  sh "ruby test/*.rb"
   sh "bacon -q -a"
   sh "cucumber -f progress features"
 end
