@@ -3,7 +3,12 @@ Rack-Jekyll
 
 Transform your [Jekyll](http://github.com/mojombo/jekyll) app into [Rack](http://github.com/rack/rack) application
 
-You can run it with rackup and [shotgun](http://github.com/rtomakyo/shotgun), [unicorn](http://github.com/defunkt/unicorn).
+- Can run it with rackup and [shotgun](http://github.com/rtomakyo/shotgun), [unicorn](http://github.com/defunkt/unicorn), and more.
+
+- Can run rack-jekyll with any modified jekyll
+
+- Can deploy rack-jekyll on Heroku, EC2, Slicehost, Rackspace Cloud, Dedicated server, VPS, etc..
+
 
 Heroku Demo: [http://bry4n.heroku.com/](http://bry4n.heroku.com/)
 
@@ -43,6 +48,22 @@ You need to generate pages and git-add pages and git-commit before you deploy yo
     7) heroku create
     
     8) git push heroku master
+
+
+## Initialization Options
+
+    :destination          - use the desintation path (default: _site)
+
+
+*Example:*
+
+    run Rack::Jekyll.new(:destination => "mysite")
+
+
+## YAML Config
+
+It now can read the `_config.yml` file for destination path. Read [Jekyll Configuration](http://wiki.github.com/mojombo/jekyll/configuration)
+
 
 ## 404 page
 
