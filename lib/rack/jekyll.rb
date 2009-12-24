@@ -7,10 +7,11 @@ module Rack
     
     def initialize(opts = {})
       if ::File.exist?("_config.yml")
-        @config = YAJL.load(File.read("_config.yml"))
+        @config = ::YAML.load(::File.read("_config.yml"))
         if @config[:desination].nil?
           @path = opts[:desination].nil? ? "_site" : opts[:desination]
         else
+          opts.merge!(@config)
           @path = @config[:desination].nil? ? "_site" : @config[:desination]
         end
       end
