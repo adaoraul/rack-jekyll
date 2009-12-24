@@ -6,11 +6,17 @@ module Rack
   class Jekyll
     
     def initialize(opts = {})
-      @path = opts[:path].nil? ? "_site" : opts[:path]
-      @auto_build = opts[:auto].nil? ? false : opts[:auto]
-      @files = Dir[@path + "/**/*"].inspect
+      if ::File.exist?("_config.yml")
+        @config = YAJL.load(File.read("_config.yml"))
+        if @config[:desination].nil?
+          @path = opts[:desination].nil? ? "_site" : opts[:desination]
+        else
+          @path = @config[:desination].nil? ? "_site" : @config[:desination]
+        end
+      end
+      @files = ::Dir[@path + "/**/*"].inspect
       @mimes = Rack::Mime::MIME_TYPES.reject{|k,v|k=~%r{html?}}.map{|k,v|%r{#{k.gsub('.','\.')}$}i}
-      if Dir[@path + "/**/*"].empty? && @auto_build
+      if ::Dir[@path + "/**/*"].empty?
         begin
           require "jekyll"
           options = ::Jekyll.configuration(opts)
