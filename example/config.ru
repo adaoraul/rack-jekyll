@@ -1,4 +1,4 @@
 
 require "../lib/rack/jekyll"
 
-run Rack::Jekyll.new :auto => true 
+run Rack::Jekyll.new 

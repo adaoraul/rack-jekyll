@@ -17,17 +17,19 @@ module Rack
       end
       @files = ::Dir[@path + "/**/*"].inspect
       @mimes = Rack::Mime::MIME_TYPES.reject{|k,v|k=~%r{html?}}.map{|k,v|%r{#{k.gsub('.','\.')}$}i}
+      @compiling = false
       if ::Dir[@path + "/**/*"].empty?
         begin
           require "jekyll"
           options = ::Jekyll.configuration(opts)
           site = ::Jekyll::Site.new(options)
+          @compiling = true
           site.process
         rescue LoadError => boom
+          @compiling = false
         end
       end
     end
-    
     def call(env)
       request = Request.new(env)
       path_info = request.path_info
@@ -43,7 +45,11 @@ module Rack
       else
         status, body, path_info = ::File.exist?(@path+"/404.html") ? [200,content(@path+"/404.html"),"404.html"] : [404,"Not found","404.html"]
         mime = mime(path_info)
-        [status, {"Content-Type" => mime, "Content-Type" => body.length.to_s}, [body]]
+        if !@compiling
+          [status, {"Content-Type" => mime, "Content-Type" => body.length.to_s}, [body]]
+        else
+          [200, {"Content-Type" => "text/plain"}, ["This site is currently generating pages. Please reload this page after 10 secs."]]
+        end
       end
     end
     def content(file)
