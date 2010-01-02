@@ -16,7 +16,7 @@ module Rack
         end
       end
       @files = ::Dir[@path + "/**/*"].inspect
-      @mimes = Rack::Mime::MIME_TYPES.reject{|k,v|k=~%r{html?}}.map{|k,v|%r{#{k.gsub('.','\.')}$}i}
+      @mimes = Rack::Mime::MIME_TYPES.map{|k,v|%r{#{k.gsub('.','\.')}$}i}
       @compiling = false
       if ::Dir[@path + "/**/*"].empty?
         begin
@@ -56,8 +56,12 @@ module Rack
       ::File.read(file)
     end
     def mime(path_info)
-      ext = $1 if path_info =~ /(\.\S+)$/
-      Mime.mime_type((ext.nil? ? ".html" : ext))
+      if path_info !~ /html$/i
+        ext = $1 if path_info =~ /(\.\S+)$/
+        Mime.mime_type((ext.nil? ? ".html" : ext))
+      else
+        Mime.mime_type(".html")
+      end
     end
   end
 end
