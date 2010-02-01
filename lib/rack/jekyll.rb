@@ -6,9 +6,9 @@ module Rack
   class Jekyll
     
     def initialize(opts = {})
-      @config = []
       if ::File.exist?(Dir.pwd + "/_config.yml")
         @config = ::YAML.load(::File.read(Dir.pwd + "/_config.yml"))
+        @config = (@config.class == FalseClass ? {} : @config)
         if @config[:desination].nil?
           @path = opts[:desination].nil? ? "_site" : opts[:desination]
         else
