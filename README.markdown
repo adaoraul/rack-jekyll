@@ -41,7 +41,7 @@ You need to generate pages and git-add pages and git-commit before you deploy yo
     
     4) echo "rack-jekyll" > .gems
     
-    5) git init && git add config.ru .gems _site/*
+    5) git init && git add .
     
     6) git commit -m "first heroku app"
     
