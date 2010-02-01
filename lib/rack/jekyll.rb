@@ -6,8 +6,9 @@ module Rack
   class Jekyll
     
     def initialize(opts = {})
-      if ::File.exist?("_config.yml")
-        @config = ::YAML.load(::File.read("_config.yml"))
+      @config = []
+      if ::File.exist?(Dir.pwd + "/_config.yml")
+        @config = ::YAML.load(::File.read(Dir.pwd + "/_config.yml"))
         if @config[:desination].nil?
           @path = opts[:desination].nil? ? "_site" : opts[:desination]
         else
@@ -16,7 +17,7 @@ module Rack
         end
       end
       @files = ::Dir[@path + "/**/*"].inspect
-      @mimes = Rack::Mime::MIME_TYPES.map{|k,v|%r{#{k.gsub('.','\.')}$}i}
+      @mimes = Rack::Mime::MIME_TYPES.map{|k,v| /#{k.gsub('.','\.')}$/i }
       @compiling = false
       if ::Dir[@path + "/**/*"].empty?
         begin
