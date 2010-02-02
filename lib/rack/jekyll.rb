@@ -9,14 +9,15 @@ module Rack
       if ::File.exist?(Dir.pwd + "/_config.yml")
         @config = ::YAML.load(::File.read(Dir.pwd + "/_config.yml"))
         @config = (@config.class == FalseClass ? {} : @config)
-        if @config[:desination].nil?
-          @path = opts[:desination].nil? ? "_site" : opts[:desination]
+        if @config[:destination].nil?
+          @path = opts[:destination].nil? ? "_site" : opts[:destination]
         else
           opts.merge!(@config)
-          @path = @config[:desination].nil? ? "_site" : @config[:desination]
+          @path = @config[:destination].nil? ? "_site" : @config[:destination]
         end
       end
       @files = ::Dir[@path + "/**/*"].inspect
+      p @files if ENV['RACK_DEBUG'] == "true"
       @mimes = Rack::Mime::MIME_TYPES.map{|k,v| /#{k.gsub('.','\.')}$/i }
       @compiling = false
       if ::Dir[@path + "/**/*"].empty?
