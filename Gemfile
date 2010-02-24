@@ -1,13 +1,9 @@
-clear_sources
-bundle_path "vendor/bundler_gems"
+source :gemcutter
 
-source "http://gemcutter.org"
-source "http://gems.github.com"
-
-gem "jekyll", "0.5.4"
+gem "jekyll", "0.5.7"
 gem "rack",  "1.0.1"
 
 only :test do
   gem "bacon",       "1.1.0"
-  gem "cucumber",    "0.5.1"
+  gem "cucumber",    "0.6.2"
 end
