@@ -10,6 +10,11 @@ When /^I request a page$/ do
   @request = get(@path)
 end
 
+When /^I request a page with a date of '(.*)'$/ do |date|
+  @request = get(@path, {'HTTP_IF_MODIFIED_SINCE' => date})
+end
+
+
 Then /^the http status should be (.*)$/ do |code|
   true if @request.status == code
 end
@@ -26,7 +31,7 @@ Then /^the data should show (.*)$/ do |body|
   true if @request.body == body
 end
 
-def get(path)
+def get(path, headers={})
   req = Rack::MockRequest.new(@jekyll)
-  req.get(path)
+  req.get(path,headers)
 end

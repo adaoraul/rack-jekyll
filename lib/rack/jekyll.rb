@@ -42,10 +42,19 @@ module Rack
           end
         end
         mime = mime(path_info)
-        body = content(::File.expand_path(@path + path_info))
-        [200, {"Content-Type" => mime, "Content-length" => body.length.to_s}, [body]]
+
+        file  = file_info(@path + path_info)
+        body = file[:body]
+        time = file[:time]
+
+        if time == request.env['HTTP_IF_MODIFIED_SINCE']
+          [304, {'Last-Modified' => time}, []]
+        else
+          [200, {"Content-Type" => mime, "Content-length" => body.length.to_s, 'Last-Modified' => time}, [body]]
+        end
+
       else
-        status, body, path_info = ::File.exist?(@path+"/404.html") ? [404,content(@path+"/404.html"),"404.html"] : [404,"Not found","404.html"]
+        status, body, path_info = ::File.exist?(@path+"/404.html") ? [404,file_info(@path+"/404.html")[:body],"404.html"] : [404,"Not found","404.html"]
         mime = mime(path_info)
         if !@compiling
           [status, {"Content-Type" => mime, "Content-Type" => body.length.to_s}, [body]]
@@ -54,9 +63,14 @@ module Rack
         end
       end
     end
-    def content(file)
-      ::File.read(file)
+
+    def file_info(path)
+      expand_path = ::File.expand_path(path)
+      ::File.open(expand_path, 'r') do |f|
+        {:body => f.read, :time => f.mtime.httpdate, :expand_path => expand_path}
+      end
     end
+
     def mime(path_info)
       if path_info !~ /html$/i
         ext = $1 if path_info =~ /(\.\S+)$/

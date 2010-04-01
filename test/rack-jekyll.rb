@@ -18,6 +18,9 @@ class RackJekyllTest < Test::Unit::TestCase
     assert_not_equal(@request.get("/").status,404)
     assert_equal(@request.get("/show/me/404").status,404)
     assert_not_equal(@request.get("/show/me/404").status,200)
+    assert_equal(@request.get("/", {'HTTP_IF_MODIFIED_SINCE' => 'Thu, 01 Apr 2010 15:27:52 GMT'}).status,304)
+    assert_equal(@request.get("/", {'HTTP_IF_MODIFIED_SINCE' => 'Thu, 01 Apr 2010 13:27:52 GMT'}).status,200)
+    assert_equal(@request.get("/show/me/404", {'HTTP_IF_MODIFIED_SINCE' => 'Thu, 01 Apr 2010 13:27:52 GMT'}).status,404)
   end
 
   def test_content_types

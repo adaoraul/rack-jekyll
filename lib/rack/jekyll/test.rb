@@ -21,7 +21,12 @@ module Rack
           end
           mime = mime(path_info)
           body = "Jekyll/Rack"
-          [200, {"Content-Type" => mime, "Content-length" => body.length.to_s}, [body]]
+          time = "Thu, 01 Apr 2010 15:27:52 GMT"
+          if time == request.env['HTTP_IF_MODIFIED_SINCE']
+            [304, {'Last-Modified' => time}, []]
+          else
+            [200, {"Content-Type" => mime, "Content-length" => body.length.to_s, "Last-Modified" => "Thu, 01 Apr 2010 15:27:52 GMT"}, [body]]
+          end
         else
           status, body, path_info = [404,"Not found","404.html"]
           mime = mime(path_info)
