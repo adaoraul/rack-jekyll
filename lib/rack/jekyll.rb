@@ -57,7 +57,7 @@ module Rack
         status, body, path_info = ::File.exist?(@path+"/404.html") ? [404,file_info(@path+"/404.html")[:body],"404.html"] : [404,"Not found","404.html"]
         mime = mime(path_info)
         if !@compiling
-          [status, {"Content-Type" => mime, "Content-Type" => body.length.to_s}, [body]]
+          [status, {"Content-Type" => mime, "Content-length" => body.length.to_s}, [body]]
         else
           [200, {"Content-Type" => "text/plain"}, ["This site is currently generating pages. Please reload this page after 10 secs."]]
         end
