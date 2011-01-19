@@ -9,11 +9,11 @@ module Rack
       if ::File.exist?(Dir.pwd + "/_config.yml")
         @config = ::YAML.load(::File.read(Dir.pwd + "/_config.yml"))
         @config = (@config.class == FalseClass ? {} : @config)
-        if @config[:destination].nil?
+        if @config["destination"].nil?
           @path = opts[:destination].nil? ? "_site" : opts[:destination]
         else
           opts.merge!(@config)
-          @path = @config[:destination].nil? ? "_site" : @config[:destination]
+          @path = @config["destination"].nil? ? "_site" : @config["destination"]
         end
       end
       @files = ::Dir[@path + "/**/*"].inspect
