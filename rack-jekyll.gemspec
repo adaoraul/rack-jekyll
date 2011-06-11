@@ -1,4 +1,4 @@
-require "lib/rack/jekyll/version"
+require_relative 'lib/rack/jekyll'
 
 Gem::Specification.new do |s|
  s.required_rubygems_version = ">= 1.3.6"
@@ -11,13 +11,7 @@ Gem::Specification.new do |s|
  s.authors	= ['Bryan Goines']
  s.email	= 'bryan@ffiirree.com'
  
- s.files 	= %w[
-			README.markdown
-			LICENSE
-			lib/rack/jekyll.rb
-                        lib/rack/jekyll/test.rb
-                        lib/rack/jekyll/version.rb
-		  ]
+ s.files 	= Dir["{lib/**/*}"] %w[README.markdown LICENSE]
  
  s.extra_rdoc_files	= %w[README.markdown]
  s.homepage = "http://github.com/bry4n/rack-jekyll"

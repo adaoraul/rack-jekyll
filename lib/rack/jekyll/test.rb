@@ -37,6 +37,6 @@ module Rack
         ext = $1 if path_info =~ /(\.\S+)$/
         Mime.mime_type((ext.nil? ? ".html" : ext))
       end
-   end
+    end
   end
 end
