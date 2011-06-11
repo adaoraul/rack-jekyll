@@ -1,7 +1,6 @@
 require "test/unit"
-require "lib/rack/jekyll/test"
 require "rack/mock"
-
+require_relative "../lib/rack/jekyll/test"
 class RackJekyllTest < Test::Unit::TestCase
   def setup
     @jekyll = Rack::Jekyll::Test.new    

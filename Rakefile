@@ -1,13 +1,17 @@
-require 'lib/rack/jekyll/version'
+require 'rack'
+require 'rake'
+require 'rake/testtask'
+require_relative 'lib/rack/jekyll'
 
 task :default => :test
 
 desc "Run all tests"
-task :test do
-  sh "ruby test/*.rb"
-  sh "bacon -q -a"
-  sh "cucumber -f progress features"
+Rake::TestTask.new("test") do |t|
+  t.pattern = 'test/*.rb'
+  t.verbose = true
+  t.warning = true
 end
+
 desc "Build gem"
 task :build do
   sh "gem build rack-jekyll.gemspec"
