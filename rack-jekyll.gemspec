@@ -20,7 +20,6 @@ Gem::Specification.new do |s|
 		  ]
  
  s.extra_rdoc_files	= %w[README.markdown]
- s.has_rdoc = false
  s.homepage = "http://github.com/bry4n/rack-jekyll"
  s.require_paths = %w[lib]
  s.rubyforge_project = 'rack-jekyll'

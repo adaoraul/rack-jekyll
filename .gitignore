@@ -1,3 +1,4 @@
 *.gem
+.rvmrc
 vendor/
 bin/
