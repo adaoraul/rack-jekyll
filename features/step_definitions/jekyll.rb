@@ -1,4 +1,4 @@
-require "lib/rack/jekyll/test"
+require_relative "../../lib/rack/jekyll/test"
 require "rack/mock"
 
 Given /^I have entered the path (.*)$/ do |path|

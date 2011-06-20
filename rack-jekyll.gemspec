@@ -11,7 +11,7 @@ Gem::Specification.new do |s|
  s.authors	= ['Bryan Goines']
  s.email	= 'bryan@ffiirree.com'
  
- s.files 	= Dir["{lib/**/*}"] %w[README.markdown LICENSE]
+ s.files 	= ['README.markdown', 'LICENSE', 'lib/rack/jekyll.rb', 'lib/rack/jekyll/test.rb', 'lib/rack/jekyll/helpers.rb', 'lib/rack/jekyll/version.rb']
  
  s.extra_rdoc_files	= %w[README.markdown]
  s.homepage = "http://github.com/bry4n/rack-jekyll"

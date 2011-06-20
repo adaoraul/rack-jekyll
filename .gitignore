@@ -2,3 +2,5 @@
 .rvmrc
 vendor/
 bin/
+.DS_Store
+example/_site
