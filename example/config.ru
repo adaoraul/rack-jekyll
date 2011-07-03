@@ -1,4 +1,4 @@
-require '../lib/rack/jekyll'
+require File.join(File.dirname(__FILE__), '../lib/rack', 'jekyll')
 
 # The jekyll root directory
 root = ::File.dirname(__FILE__)
