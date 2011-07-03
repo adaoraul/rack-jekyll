@@ -3,6 +3,7 @@ require "yaml"
 require "rack/request"
 require "rack/response"
 require File.join(File.dirname(__FILE__), 'jekyll', 'helpers')
+require File.join(File.dirname(__FILE__), 'jekyll', 'version')
 
 module Rack
   class Jekyll
