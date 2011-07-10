@@ -69,6 +69,14 @@ It now can read the `_config.yml` file for destination path. Read [Jekyll Config
 
 You can create a new file: `404.html` with YAML Front Matter. See my [Heroku Demo 404](http://bry4n.heroku.com/show/me/404/)
 
+## Contributors
+* adaoraul (Adão Raul)
+* Nerian (Gonzalo Rodríguez-Baltanás Díaz)
+* scottwater (Scott Watermasysk)
+* thedjinn (Emil Loer)
+* bry4n (Bryan Goines)
+* thibaudgg (Thibaud Guillaume-Gentil)
+* bemurphy (Brendon Murphy)
 
 ## Contribution
 
