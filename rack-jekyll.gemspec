@@ -18,7 +18,7 @@ Gem::Specification.new do |s|
  s.require_paths = %w[lib]
  s.rubyforge_project = 'rack-jekyll'
  s.rubygems_version = '1.3.1'
- s.add_dependency 'jekyll', "~> 0.6.2"
+ s.add_dependency 'jekyll', "~> 0.11.0"
  s.add_dependency 'rack', "~> 1.2.1"
  s.add_development_dependency('bacon')
  s.platform = Gem::Platform::RUBY
