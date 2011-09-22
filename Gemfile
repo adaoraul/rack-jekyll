@@ -1,7 +1,7 @@
 source :gemcutter
 
-gem "jekyll", "0.5.7"
-gem "rack",  "1.0.1"
+gem "jekyll", "0.11.0"
+gem "rack",  "1.3.2"
 
 group :test do
   gem "bacon",       "1.1.0"
