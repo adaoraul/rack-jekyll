@@ -48,11 +48,14 @@ module Rack
         file  = file_info(@path + path_info)
         body = file[:body]
         time = file[:time]
+        hdrs = { 'Last-Modified'  => time }
 
         if time == @request.env['HTTP_IF_MODIFIED_SINCE']
-          [@response.status, {'Last-Modified' => time}, []]
+          [304, hdrs, []]
         else
-          [@response.status, {"Content-Type" => mime, "Content-length" => body.length.to_s, 'Last-Modified' => time}, [body]]
+          hdrs.update({ 'Content-length' => body.length.to_s,
+                        'Content-Type'   => mime, } )
+          [@response.status, hdrs, [body]]
         end
 
       else
