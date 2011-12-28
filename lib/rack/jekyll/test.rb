@@ -1,7 +1,7 @@
 require "rack"
 require "rack/request"
 require "rack/response"
-require File.join(File.dirname(__FILE__), 'jekyll', 'ext')
+require File.join(File.dirname(__FILE__), 'ext')
 
 module Rack
   class Jekyll
