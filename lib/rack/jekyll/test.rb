@@ -1,6 +1,7 @@
 require "rack"
 require "rack/request"
 require "rack/response"
+require File.join(File.dirname(__FILE__), 'ext')
 
 module Rack
   class Jekyll
@@ -25,12 +26,12 @@ module Rack
           if time == request.env['HTTP_IF_MODIFIED_SINCE']
             [304, {'Last-Modified' => time}, []]
           else
-            [200, {"Content-Type" => mime, "Content-length" => body.length.to_s, "Last-Modified" => "Thu, 01 Apr 2010 15:27:52 GMT"}, [body]]
+            [200, {"Content-Type" => mime, "Content-length" => body.bytesize.to_s, "Last-Modified" => "Thu, 01 Apr 2010 15:27:52 GMT"}, [body]]
           end
         else
           status, body, path_info = [404,"Not found","404.html"]
           mime = mime(path_info)
-          [status, {"Content-Type" => mime, "Content-Type" => body.length.to_s}, [body]]
+          [status, {"Content-Type" => mime, "Content-Type" => body.bytesize.to_s}, [body]]
         end
       end
       def mime(path_info)

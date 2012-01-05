@@ -4,6 +4,7 @@ require "rack/request"
 require "rack/response"
 require File.join(File.dirname(__FILE__), 'jekyll', 'helpers')
 require File.join(File.dirname(__FILE__), 'jekyll', 'version')
+require File.join(File.dirname(__FILE__), 'jekyll', 'ext')
 
 module Rack
   class Jekyll
@@ -53,7 +54,7 @@ module Rack
         if time == @request.env['HTTP_IF_MODIFIED_SINCE']
           [304, hdrs, []]
         else
-          hdrs.update({ 'Content-length' => body.length.to_s,
+          hdrs.update({ 'Content-length' => body.bytesize.to_s,
                         'Content-Type'   => mime, } )
           [@response.status, hdrs, [body]]
         end
@@ -62,7 +63,7 @@ module Rack
         status, body, path_info = ::File.exist?(@path+"/404.html") ? [404,file_info(@path+"/404.html")[:body],"404.html"] : [404,"Not found","404.html"]
         mime = mime(path_info)
         if !@compiling
-          [status, {"Content-Type" => mime, "Content-length" => body.length.to_s}, [body]]
+          [status, {"Content-Type" => mime, "Content-length" => body.bytesize.to_s}, [body]]
         else
           [200, {"Content-Type" => "text/plain"}, ["This site is currently generating pages. Please reload this page after 10 secs."]]
         end
