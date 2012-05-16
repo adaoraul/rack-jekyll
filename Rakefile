@@ -2,7 +2,7 @@ require 'rubygems'
 require 'rubygems/specification'
 require 'rubygems/package_task'
 require 'rake/testtask'
-require 'extensions/all'
+#require 'extensions/all'
 require_relative 'lib/rack/jekyll'
 
 task :default => :test
@@ -24,7 +24,7 @@ task :install do
   sh "sudo gem install rack-jekyll-#{Rack::Jekyll.version}.gem"
 end
 
-desc "Push to Gemcutter"
+desc "Push to rubygems.org"
 task :push do
   sh "gem push rack-jekyll-#{Rack::Jekyll.version}.gem"
 end

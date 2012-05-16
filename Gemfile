@@ -1,7 +1,11 @@
-source :gemcutter
+source 'http://rubygems.org/'
 
 gem "jekyll", "0.11.0"
-gem "rack",  "1.3.2"
+gem "rack",  "~> 1.4.1"
+
+group :development do
+  gem 'RedCloth'
+end
 
 group :test do
   gem "bacon",       "1.1.0"
