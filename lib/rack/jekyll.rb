@@ -14,7 +14,7 @@ module Rack
       config_file = '_config.yml'
       if ::File.exist?(config_file)
         config = YAML.load_file(config_file)
-        @path = (config[:destination].nil? && "_site") || config[:destination]
+        @path = (config['destination'].nil? && "_site") || config['destination']
 
         @files = ::Dir[@path + "/**/*"].inspect
         @files unless ENV['RACK_DEBUG']
@@ -38,6 +38,7 @@ module Rack
       @request = Rack::Request.new(env)
       @response = Rack::Response.new
       path_info = @request.path_info
+      @files = ::Dir[@path + "/**/*"].inspect if @files == "[]"
       if @files.include?(path_info)
         if path_info =~ /(\/?)$/
           if @mimes.collect {|regex| path_info =~ regex }.compact.empty?
@@ -65,7 +66,8 @@ module Rack
         if !@compiling
           [status, {"Content-Type" => mime, "Content-length" => body.bytesize.to_s}, [body]]
         else
-          [200, {"Content-Type" => "text/plain"}, ["This site is currently generating pages. Please reload this page after 10 secs."]]
+          @compiling = ::Dir[@path + "/**/*"].empty?
+          [200, {"Content-Type" => "text/plain"}, ["This site is currently generating pages. Please reload this page after a couple of seconds."]]
         end
       end
     end    
