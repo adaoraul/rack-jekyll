@@ -2,7 +2,7 @@ module Rack
   class Jekyll
     def mime(path_info)
       if path_info !~ /html$/i
-        ext = $1 if path_info =~ /(\.\S+)$/
+        ext = $1 if path_info =~ /(\.[\S&&[^.]]+)$/
         Mime.mime_type((ext.nil? ? ".html" : ext))
       else
         Mime.mime_type(".html")
