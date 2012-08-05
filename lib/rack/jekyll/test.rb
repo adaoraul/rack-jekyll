@@ -7,7 +7,7 @@ module Rack
   class Jekyll
     class Test 
       def initialize
-        @files = %w{_fake/ _fake/index.html _fake/3/2/1/helloworld/index.html _fake/css/test.css _fake/js/test.js}
+        @files = %w{_fake/ _fake/index.html _fake/3/2/1/helloworld/index.html _fake/css/test.css _fake/js/test.js _fake/js/test.min.js}
         @mimes = Rack::Mime::MIME_TYPES.reject{|k,v|k=~%r{html?}}.map{|k,v|%r{#{k.gsub('.','\.')}$}i}
       end
     
@@ -35,7 +35,7 @@ module Rack
         end
       end
       def mime(path_info)
-        ext = $1 if path_info =~ /(\.\S+)$/
+        ext = $1 if path_info =~ /(\.[\S&&[^.]]+)$/
         Mime.mime_type((ext.nil? ? ".html" : ext))
       end
     end
