@@ -48,6 +48,11 @@ describe "Jekyll to Rack" do
     res = get(jekyll,"/js/test.js")
     res.headers["Content-Type"].should.equal "application/javascript"
   end
+  
+  it "should be application/javascript even when minified" do
+    res = get(jekyll,"/js/test.min.js")
+    res.headers["Content-Type"].should.equal "application/javascript"
+  end
 
   
 end

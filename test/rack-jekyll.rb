@@ -26,6 +26,7 @@ class RackJekyllTest < Test::Unit::TestCase
     assert_equal(@request.get("/").headers["Content-Type"],"text/html")
     assert_equal(@request.get("/css/test.css").headers["Content-Type"],"text/css")
     assert_equal(@request.get("/js/test.js").headers["Content-Type"],"application/javascript")
+    assert_equal(@request.get("/js/test.min.js").headers["Content-Type"],"application/javascript")
   end
 
   def test_content_length
