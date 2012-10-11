@@ -9,7 +9,7 @@ require File.join(File.dirname(__FILE__), 'jekyll', 'ext')
 module Rack
   class Jekyll
     @compiling = false
-    
+
     def initialize(opts = {})
       config_file = '_config.yml'
       if ::File.exist?(config_file)
@@ -19,21 +19,46 @@ module Rack
         @files = ::Dir[@path + "/**/*"].inspect
         @files unless ENV['RACK_DEBUG']
       end
-      
+
       @mimes = Rack::Mime::MIME_TYPES.map{|k,v| /#{k.gsub('.','\.')}$/i }
-      
+      require "jekyll"
+      options = ::Jekyll.configuration(opts)
+      site = ::Jekyll::Site.new(options)
       if ::Dir[@path + "/**/*"].empty?
-        require "jekyll"
-        options = ::Jekyll.configuration(opts)
-        site = ::Jekyll::Site.new(options)
         site.process
-        
         @compiling = true
       else
         @compiling = false
       end
+      if options['auto']
+        require 'directory_watcher'
+        require 'pathname'
+        source, destination = options['source'], options['destination']
+        puts "Auto-regenerating enabled: #{source} -> #{destination}"
+
+        dw = DirectoryWatcher.new(source)
+        dw.interval = 1
+        dw.glob = globs(source)
+
+        dw.add_observer do |*args|
+          t = Time.now.strftime("%Y-%m-%d %H:%M:%S")
+          puts "[#{t}] regeneration: #{args.size} files changed"
+          site.process
+        end
+
+        dw.start
+      end
     end
-    
+
+    def globs(source)
+      Dir.chdir(source) do
+        dirs = Dir['*'].select { |x| Pathname(x).directory? }
+        dirs -= ['_site']
+        dirs = dirs.map { |x| "#{x}/**/*" }
+        dirs += ['*']
+      end
+    end
+
     def call(env)
       @request = Rack::Request.new(env)
       @response = Rack::Response.new
@@ -70,6 +95,6 @@ module Rack
           [200, {"Content-Type" => "text/plain"}, ["This site is currently generating pages. Please reload this page after a couple of seconds."]]
         end
       end
-    end    
+    end
   end
 end
