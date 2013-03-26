@@ -5,7 +5,7 @@ group :development do
 end
 
 group :test do
-  gem "bacon",       "1.1.0"
+  gem "bacon",       "1.2.0"
   gem "cucumber",    "1.2.3"
 end
 
