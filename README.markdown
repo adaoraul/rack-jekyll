@@ -78,6 +78,8 @@ You can create a new file: `404.html` with YAML Front Matter. See my [Heroku Dem
 * thibaudgg (Thibaud Guillaume-Gentil)
 * bemurphy (Brendon Murphy)
 * imajes (James Cox)
+* mattr- (Matt Rogers)
+
 ## Contribution
 
 Contributing this is more than just welcome. Fork this and create a new branch then pull request.

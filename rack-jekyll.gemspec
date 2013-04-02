@@ -11,7 +11,7 @@ Gem::Specification.new do |s|
  s.summary  = "rack-jekyll"
 
  s.authors  = ['Bryan Goines', 'Adão Raul']
- s.email  = 'bryan@ffiirree.com'
+ s.email  = 'adao.raul@gmail.com'
 
  s.files  = ['README.markdown', 'LICENSE', 'lib/rack/jekyll.rb', 'lib/rack/jekyll/test.rb', 'lib/rack/jekyll/helpers.rb', 'lib/rack/jekyll/version.rb', 'lib/rack/jekyll/ext.rb']
 
