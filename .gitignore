@@ -4,3 +4,4 @@ vendor/
 bin/
 .DS_Store
 example/_site
+Gemfile.lock
