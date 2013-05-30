@@ -62,7 +62,7 @@ You need to generate pages and git-add pages and git-commit before you deploy yo
 
 ## YAML Config
 
-It now can read the `_config.yml` file for destination path. Read [Jekyll Configuration](http://wiki.github.com/mojombo/jekyll/configuration)
+It now can read the `_config.yml` file for destination path. Read [Jekyll Configuration](http://jekyllrb.com/docs/configuration/)
 
 
 ## 404 page
