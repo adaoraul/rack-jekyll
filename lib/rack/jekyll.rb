@@ -31,22 +31,20 @@ module Rack
         @compiling = false
       end
       if options['auto']
-        require 'directory_watcher'
+        require 'listen'
         require 'pathname'
-        source, destination = options['source'], options['destination']
+        source = options['source']
+        destination = Pathname.new(options['destination'])
+                              .relative_path_from(Pathname.new(source))
+                              .to_path
         puts "Auto-regenerating enabled: #{source} -> #{destination}"
 
-        dw = DirectoryWatcher.new(source)
-        dw.interval = 1
-        dw.glob = globs(source)
-
-        dw.add_observer do |*args|
+        Listen.to(source, :ignore => %r{#{Regexp.escape(destination)}}) do |modified, added, removed|
           t = Time.now.strftime("%Y-%m-%d %H:%M:%S")
-          puts "[#{t}] regeneration: #{args.size} files changed"
+          n = modified.length + added.length + removed.length
+          puts "[#{t}] regeneration: #{n = modified.length + added.length + removed.length} files changed"
           site.process
         end
-
-        dw.start
       end
     end
 
