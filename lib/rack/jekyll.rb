@@ -63,6 +63,9 @@ module Rack
       @request = Rack::Request.new(env)
       @response = Rack::Response.new
       path_info = @request.path_info
+      while @compiling
+        sleep 0.1
+      end
       @files = ::Dir[@path + "/**/*"].inspect if @files == "[]"
       if @files.include?(path_info)
         if path_info =~ /(\/?)$/
@@ -88,9 +91,6 @@ module Rack
       else
         status, body, path_info = ::File.exist?(@path+"/404.html") ? [404,file_info(@path+"/404.html")[:body],"404.html"] : [404,"Not found","404.html"]
         mime = mime(path_info)
-        while @compiling
-          sleep 0.1
-        end
 
         [status, {"Content-Type" => mime, "Content-length" => body.bytesize.to_s}, [body]]
       end
