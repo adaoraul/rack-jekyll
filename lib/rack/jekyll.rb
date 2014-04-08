@@ -14,8 +14,8 @@ module Rack
       config_file = '_config.yml'
       if ::File.exist?(config_file)
         config = YAML.load_file(config_file)
-        @path = (config['destination'].nil? && "_site") || config['destination']
 
+        @path = config['destination'] || "_site"
         @files = ::Dir[@path + "/**/*"].inspect
         @files unless ENV['RACK_DEBUG']
       end
@@ -24,12 +24,11 @@ module Rack
       require "jekyll"
       options = ::Jekyll.configuration(opts)
       site = ::Jekyll::Site.new(options)
-      if ::Dir[@path + "/**/*"].empty?
-        site.process
-        @compiling = true
-      else
-        @compiling = false
-      end
+
+      @compiling = true
+      site.process
+      @compiling = false
+      
       if options['auto']
         require 'listen'
         require 'pathname'
@@ -40,10 +39,13 @@ module Rack
         puts "Auto-regenerating enabled: #{source} -> #{destination}"
 
         Listen.to(source, :ignore => %r{#{Regexp.escape(destination)}}) do |modified, added, removed|
+          @compiling = true
           t = Time.now.strftime("%Y-%m-%d %H:%M:%S")
           n = modified.length + added.length + removed.length
           puts "[#{t}] regeneration: #{n = modified.length + added.length + removed.length} files changed"
           site.process
+          @files = ::Dir[@path + "/**/*"].inspect
+          @compiling = false
         end
       end
     end
@@ -61,6 +63,9 @@ module Rack
       @request = Rack::Request.new(env)
       @response = Rack::Response.new
       path_info = @request.path_info
+      while @compiling
+        sleep 0.1
+      end
       @files = ::Dir[@path + "/**/*"].inspect if @files == "[]"
       if @files.include?(path_info)
         if path_info =~ /(\/?)$/
@@ -86,12 +91,8 @@ module Rack
       else
         status, body, path_info = ::File.exist?(@path+"/404.html") ? [404,file_info(@path+"/404.html")[:body],"404.html"] : [404,"Not found","404.html"]
         mime = mime(path_info)
-        if !@compiling
-          [status, {"Content-Type" => mime, "Content-length" => body.bytesize.to_s}, [body]]
-        else
-          @compiling = ::Dir[@path + "/**/*"].empty?
-          [200, {"Content-Type" => "text/plain"}, ["This site is currently generating pages. Please reload this page after a couple of seconds."]]
-        end
+
+        [status, {"Content-Type" => mime, "Content-length" => body.bytesize.to_s}, [body]]
       end
     end
   end
