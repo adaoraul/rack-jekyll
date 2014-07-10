@@ -11,7 +11,7 @@ module Rack
     @compiling = false
 
     def initialize(opts = {})
-      config_file = '_config.yml'
+      config_file = opts[:config] || "_config.yml"
       if ::File.exist?(config_file)
         config = YAML.load_file(config_file)
 
