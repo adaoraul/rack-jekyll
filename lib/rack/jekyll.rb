@@ -38,7 +38,7 @@ module Rack
                               .to_path
         puts "Auto-regenerating enabled: #{source} -> #{destination}"
 
-        Listen.to(source, :ignore => %r{#{Regexp.escape(destination)}}) do |modified, added, removed|
+        listener = Listen.to(source, :ignore => %r{#{Regexp.escape(destination)}}) do |modified, added, removed|
           @compiling = true
           t = Time.now.strftime("%Y-%m-%d %H:%M:%S")
           n = modified.length + added.length + removed.length
@@ -47,6 +47,7 @@ module Rack
           @files = ::Dir[@path + "/**/*"].inspect
           @compiling = false
         end
+        listener.start
       end
     end
 
