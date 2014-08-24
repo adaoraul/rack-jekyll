@@ -2,13 +2,32 @@ require "rack"
 require "yaml"
 require "rack/request"
 require "rack/response"
+require "thread"
 require File.join(File.dirname(__FILE__), 'jekyll', 'helpers')
 require File.join(File.dirname(__FILE__), 'jekyll', 'version')
 require File.join(File.dirname(__FILE__), 'jekyll', 'ext')
 
 module Rack
   class Jekyll
-    @compiling = false
+    def compiling?
+      if @compile_queue.nil?
+        false
+      else
+        ! @compile_queue.empty?
+      end
+    end
+
+    def process(site)
+      puts "Building site"
+      @compile_queue = Queue.new
+      @compile_queue << '.'
+
+      Thread.new do
+        site.process
+        puts "Site rendering complete"
+        @compile_queue.clear
+      end
+    end
 
     def initialize(opts = {})
       config_file = opts[:config] || "_config.yml"
@@ -25,10 +44,7 @@ module Rack
       options = ::Jekyll.configuration(opts)
       site = ::Jekyll::Site.new(options)
 
-      @compiling = true
-      site.process
-      @compiling = false
-      
+      process(site)
       if options['auto']
         require 'listen'
         require 'pathname'
@@ -39,13 +55,11 @@ module Rack
         puts "Auto-regenerating enabled: #{source} -> #{destination}"
 
         Listen.to(source, :ignore => %r{#{Regexp.escape(destination)}}) do |modified, added, removed|
-          @compiling = true
           t = Time.now.strftime("%Y-%m-%d %H:%M:%S")
           n = modified.length + added.length + removed.length
           puts "[#{t}] regeneration: #{n = modified.length + added.length + removed.length} files changed"
-          site.process
+          process(site)
           @files = ::Dir[@path + "/**/*"].inspect
-          @compiling = false
         end
       end
     end
@@ -59,13 +73,34 @@ module Rack
       end
     end
 
+    def render_wait_page(req)
+        response = <<-PAGE.gsub(/^\s*/, '')
+        <!DOCTYPE HTML>
+        <html lang="en-US">
+        <head>
+          <meta charset="UTF-8">
+          <title>Rendering #{req.path_info}</title>
+        </head>
+        <body>
+          <h1>Hold on! I'm working on rendering that page for you.</h1>
+        </body>
+        PAGE
+
+        headers ||= {}
+        headers['Content-Length'] = response.bytesize.to_s
+        headers['Content-Type'] = 'text/html'
+        headers['Connection'] = 'keep-alive'
+        [200, headers, [response]]
+    end
+
     def call(env)
       @request = Rack::Request.new(env)
       @response = Rack::Response.new
       path_info = @request.path_info
-      while @compiling
-        sleep 0.1
+      while compiling?
+        return render_wait_page(@request)
       end
+
       @files = ::Dir[@path + "/**/*"].inspect if @files == "[]"
       if @files.include?(path_info)
         if path_info =~ /(\/?)$/
