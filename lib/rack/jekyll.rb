@@ -29,8 +29,19 @@ module Rack
       end
     end
 
+    def read_wait_page(opts)
+      if opts.has_key?(:wait_page) && ::File.exist?(opts[:wait_page])
+        path = opts[:wait_page]
+      else
+        path = ::File.expand_path("templates/wait.html", ::File.dirname(__FILE__))
+      end
+      @wait_page = ::File.open(path, 'r').read
+    end
+
     def initialize(opts = {})
       config_file = opts[:config] || "_config.yml"
+      read_wait_page(opts)
+
       if ::File.exist?(config_file)
         config = YAML.load_file(config_file)
 
@@ -74,23 +85,11 @@ module Rack
     end
 
     def render_wait_page(req)
-        response = <<-PAGE.gsub(/^\s*/, '')
-        <!DOCTYPE HTML>
-        <html lang="en-US">
-        <head>
-          <meta charset="UTF-8">
-          <title>Rendering #{req.path_info}</title>
-        </head>
-        <body>
-          <h1>Hold on! I'm working on rendering that page for you.</h1>
-        </body>
-        PAGE
-
         headers ||= {}
-        headers['Content-Length'] = response.bytesize.to_s
+        headers['Content-Length'] = @wait_page.bytesize.to_s
         headers['Content-Type'] = 'text/html'
         headers['Connection'] = 'keep-alive'
-        [200, headers, [response]]
+        [200, headers, [@wait_page]]
     end
 
     def call(env)
