@@ -53,6 +53,7 @@ You need to generate pages and git-add pages and git-commit before you deploy yo
 ## Initialization Options
 
     :destination          - use the desintation path (default: _site)
+    :wait_page            - a page to display while pages are rendering
 
 
 *Example:*
@@ -68,6 +69,21 @@ It now can read the `_config.yml` file for destination path. Read [Jekyll Config
 ## 404 page
 
 You can create a new file: `404.html` with YAML Front Matter. See my [Heroku Demo 404](http://bry4n.heroku.com/show/me/404/)
+
+## Wait page
+
+You can create a custom HTML page to display while Jekyll is rendering the
+site.  Set the `:wait_page` initialization option to point to a file relative
+to the root of your Jekyll project.
+
+*Example:*
+
+    run Rack::Jekyll.new(:wait_page => "hold_on.html")
+
+Note that this page should be self-contained (no links to external CSS
+or JS).  It is also not a bad idea to add a `<meta http-equiv="refresh"
+content="60"/>` to the `head` section so that the page will periodically
+refresh itself and display the site once Jekyll has finished rendering.
 
 ## Contributors
 * adaoraul (Adão Raul)
