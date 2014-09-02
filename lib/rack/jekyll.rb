@@ -87,12 +87,12 @@ module Rack
       end
     end
 
-    def render_wait_page(req)
-        headers ||= {}
-        headers['Content-Length'] = @wait_page.bytesize.to_s
-        headers['Content-Type'] = 'text/html'
-        headers['Connection'] = 'keep-alive'
-        [200, headers, [@wait_page]]
+    def serve_wait_page(req)
+      headers ||= {}
+      headers['Content-Length'] = @wait_page.bytesize.to_s
+      headers['Content-Type'] = 'text/html'
+      headers['Connection'] = 'keep-alive'
+      [200, headers, [@wait_page]]
     end
 
     def call(env)
@@ -100,7 +100,7 @@ module Rack
       @response = Rack::Response.new
       path_info = @request.path_info
       while compiling?
-        return render_wait_page(@request)
+        return serve_wait_page(@request)
       end
 
       @files = ::Dir[@path + "/**/*"].inspect if @files == "[]"
