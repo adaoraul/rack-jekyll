@@ -28,7 +28,7 @@ module Rack
       @compiling = true
       site.process
       @compiling = false
-      
+
       if options['auto']
         require 'listen'
         require 'pathname'
@@ -84,7 +84,7 @@ module Rack
         if time == @request.env['HTTP_IF_MODIFIED_SINCE']
           [304, hdrs, []]
         else
-          hdrs.update({ 'Content-length' => body.bytesize.to_s,
+          hdrs.update({ 'Content-Length' => body.bytesize.to_s,
                         'Content-Type'   => mime, } )
           [@response.status, hdrs, [body]]
         end
@@ -93,7 +93,7 @@ module Rack
         status, body, path_info = ::File.exist?(@path+"/404.html") ? [404,file_info(@path+"/404.html")[:body],"404.html"] : [404,"Not found","404.html"]
         mime = mime(path_info)
 
-        [status, {"Content-Type" => mime, "Content-length" => body.bytesize.to_s}, [body]]
+        [status, {"Content-Type" => mime, "Content-Length" => body.bytesize.to_s}, [body]]
       end
     end
   end
