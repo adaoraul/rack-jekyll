@@ -10,8 +10,6 @@ Transform your [Jekyll](http://github.com/mojombo/jekyll) app into [Rack](http:/
 - Can deploy rack-jekyll on Heroku, EC2, Slicehost, Rackspace Cloud, Dedicated server, VPS, etc..
 
 
-Heroku Demo: [http://bry4n.heroku.com/](http://bry4n.heroku.com/)
-
 ### How to use it?
 
 *config.ru* is required in order to run with shotgun and rackup. Even you can deploy your jekyll app to [Heroku!](http://www.heroku.com/)
