@@ -50,6 +50,7 @@ You need to generate pages and git-add pages and git-commit before you deploy yo
 
 ## Initialization Options
 
+    :config               - specify a config file  (default: "_config.yml")    
     :destination          - use the desintation path (default: _site)
 
 
