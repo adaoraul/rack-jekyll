@@ -18,7 +18,7 @@ module Rack
 
         @path = config['destination'] || "_site"
         @files = ::Dir[@path + "/**/*"].inspect
-        @files unless ENV['RACK_DEBUG']
+        puts @files.inspect if ENV['RACK_DEBUG']
       end
 
       @mimes = Rack::Mime::MIME_TYPES.map{|k,v| /#{k.gsub('.','\.')}$/i }
