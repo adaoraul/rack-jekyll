@@ -31,6 +31,10 @@ Then /^the data should show (.*)$/ do |body|
   assert_equal(body, @request.body)
 end
 
+Then /^there should be no '(.*)' header$/ do |header|
+  assert_false @request.headers.has_key?(header)
+end
+
 def get(path, headers={})
   req = Rack::MockRequest.new(@jekyll)
   req.get(path,headers)
