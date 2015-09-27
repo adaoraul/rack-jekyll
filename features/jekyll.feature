@@ -21,6 +21,8 @@ Feature: Rack-Jekyll
     Given I have entered the path /show/me/404/
     When I request a page
     Then the http status should be 404
+    And the content-type should be text/html
+    And the content-length should be 9
 
   Scenario: Request static pages
     Given I have entered the path /css/test.css

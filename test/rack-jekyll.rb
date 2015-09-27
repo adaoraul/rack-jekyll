@@ -27,11 +27,13 @@ class RackJekyllTest < Test::Unit::TestCase
     assert_equal(@request.get("/css/test.css").headers["Content-Type"],"text/css")
     assert_equal(@request.get("/js/test.js").headers["Content-Type"],"application/javascript")
     assert_equal(@request.get("/js/test.min.js").headers["Content-Type"],"application/javascript")
+    assert_equal(@request.get("/show/me/404").headers["Content-Type"],"text/html")
   end
 
   def test_content_length
     assert_equal(@request.get("/").headers["Content-Length"].to_i, 11)
     assert_not_equal(@request.get("/").headers["Content-Length"].to_i, 12)
+    assert_equal(@request.get("/show/me/404").headers["Content-Length"].to_i,9)
     assert_nil(@request.get("/", {'HTTP_IF_MODIFIED_SINCE' => 'Thu, 01 Apr 2010 15:27:52 GMT'}).headers["Content-Length"])
   end
 
