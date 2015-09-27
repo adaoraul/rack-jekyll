@@ -10,19 +10,21 @@ Feature: Rack-Jekyll
     Then the content-type should be text/html
     And the content-length should be 11
     And the data should show Jekyll/Rack
-    
+
   Scenario: Request 304 page
     Given I have entered the path /
     When I request a page with a date of 'Thu, 01 Apr 2010 15:27:52 GMT'
     Then the http status should be 304
-    And the content-length should be 0
+    And there should be no 'Content-Length' header
 
   Scenario: Request 404 page
     Given I have entered the path /show/me/404/
     When I request a page
     Then the http status should be 404
+    And the content-type should be text/html
+    And the content-length should be 9
 
-  Scenario: Request a static pages
+  Scenario: Request static pages
     Given I have entered the path /css/test.css
     When I request a page
     Then the http status should be 200

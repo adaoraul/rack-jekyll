@@ -16,19 +16,23 @@ end
 
 
 Then /^the http status should be (.*)$/ do |code|
-  true if @request.status == code
+  assert_equal(code, @request.status.to_s)
 end
 
 Then /^the content\-type should be (.*)$/ do |type|
-  true if @request.headers["Content-Type"] == type
+  assert_equal(type, @request.headers["Content-Type"])
 end
 
 Then /^the content\-length should be (.*)$/ do |length|
-  true if @request.headers["Content-Length"] == length
+  assert_equal(length, @request.headers["Content-Length"])
 end
 
 Then /^the data should show (.*)$/ do |body|
-  true if @request.body == body
+  assert_equal(body, @request.body)
+end
+
+Then /^there should be no '(.*)' header$/ do |header|
+  assert_false @request.headers.has_key?(header)
 end
 
 def get(path, headers={})

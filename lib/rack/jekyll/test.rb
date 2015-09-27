@@ -31,7 +31,7 @@ module Rack
         else
           status, body, path_info = [404,"Not found","404.html"]
           mime = mime(path_info)
-          [status, {"Content-Type" => mime, "Content-Type" => body.bytesize.to_s}, [body]]
+          [status, {"Content-Type" => mime, "Content-Length" => body.bytesize.to_s}, [body]]
         end
       end
       def mime(path_info)
