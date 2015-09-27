@@ -12,7 +12,7 @@ Transform your [Jekyll](http://github.com/mojombo/jekyll) app into a [Rack](http
 
 ### How to use it?
 
-*config.ru* is required in order to run with shotgun and rackup. You can even deploy your Jekyll app to [Heroku!](http://www.heroku.com/).
+*config.ru* is required in order to run with shotgun and rackup. You can even deploy your Jekyll app to [Heroku](http://www.heroku.com/)!
 
 Copy this into config.ru in your Jekyll's root directory.
 
