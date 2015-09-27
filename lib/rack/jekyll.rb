@@ -8,9 +8,10 @@ require File.join(File.dirname(__FILE__), 'jekyll', 'ext')
 
 module Rack
   class Jekyll
-    @compiling = false
 
     def initialize(opts = {})
+      @compiling = false
+
       config_file = opts[:config] || "_config.yml"
       if ::File.exist?(config_file)
         config = YAML.load_file(config_file)
