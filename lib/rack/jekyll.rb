@@ -1,4 +1,5 @@
 require "rack"
+require "jekyll"
 require "yaml"
 require "rack/request"
 require "rack/response"
@@ -22,7 +23,6 @@ module Rack
       end
 
       @mimes = Rack::Mime::MIME_TYPES.map{|k,v| /#{k.gsub('.','\.')}$/i }
-      require "jekyll"
       options = ::Jekyll.configuration(opts)
       site = ::Jekyll::Site.new(options)
 
