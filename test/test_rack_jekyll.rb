@@ -10,34 +10,34 @@ describe Rack::Jekyll do
   end
 
   it "can be created" do
-    refute_nil @jekyll
-    refute_nil @request
+    @jekyll.wont_be_nil
+    @request.wont_be_nil
   end
 
   it "should return correct http status code" do
-    assert_equal(@request.get("/").status,200)
-    assert_equal(@request.get("/show/me/404").status,404)
-    assert_equal(@request.get("/", {'HTTP_IF_MODIFIED_SINCE' => 'Thu, 01 Apr 2010 15:27:52 GMT'}).status,304)
-    assert_equal(@request.get("/", {'HTTP_IF_MODIFIED_SINCE' => 'Thu, 01 Apr 2010 13:27:52 GMT'}).status,200)
-    assert_equal(@request.get("/show/me/404", {'HTTP_IF_MODIFIED_SINCE' => 'Thu, 01 Apr 2010 13:27:52 GMT'}).status,404)
+    @request.get("/").status.must_equal 200
+    @request.get("/show/me/404").status.must_equal 404
+    @request.get("/", {"HTTP_IF_MODIFIED_SINCE" => "Thu, 01 Apr 2010 15:27:52 GMT"}).status.must_equal 304
+    @request.get("/", {"HTTP_IF_MODIFIED_SINCE" => "Thu, 01 Apr 2010 13:27:52 GMT"}).status.must_equal 200
+    @request.get("/show/me/404", {"HTTP_IF_MODIFIED_SINCE" => "Thu, 01 Apr 2010 13:27:52 GMT"}).status.must_equal 404
   end
 
   it "should return correct Content-Type header" do
-    assert_equal(@request.get("/").headers["Content-Type"],"text/html")
-    assert_equal(@request.get("/css/test.css").headers["Content-Type"],"text/css")
-    assert_equal(@request.get("/js/test.js").headers["Content-Type"],"application/javascript")
-    assert_equal(@request.get("/js/test.min.js").headers["Content-Type"],"application/javascript")
-    assert_equal(@request.get("/show/me/404").headers["Content-Type"],"text/html")
+    @request.get("/").headers["Content-Type"].must_equal "text/html"
+    @request.get("/css/test.css").headers["Content-Type"].must_equal "text/css"
+    @request.get("/js/test.js").headers["Content-Type"].must_equal "application/javascript"
+    @request.get("/js/test.min.js").headers["Content-Type"].must_equal "application/javascript"
+    @request.get("/show/me/404").headers["Content-Type"].must_equal "text/html"
   end
 
   it "should return correct Content-Length header" do
-    assert_equal(@request.get("/").headers["Content-Length"].to_i, 11)
-    assert_equal(@request.get("/show/me/404").headers["Content-Length"].to_i,9)
-    assert_nil(@request.get("/", {'HTTP_IF_MODIFIED_SINCE' => 'Thu, 01 Apr 2010 15:27:52 GMT'}).headers["Content-Length"])
+    @request.get("/").headers["Content-Length"].to_i.must_equal 11
+    @request.get("/show/me/404").headers["Content-Length"].to_i.must_equal 9
+    @request.get("/", {"HTTP_IF_MODIFIED_SINCE" => "Thu, 01 Apr 2010 15:27:52 GMT"}).headers["Content-Length"].must_be_nil
   end
 
   it "should return correct body" do
-    assert_equal(@request.get("/").body,"Jekyll/Rack")
-    assert_equal(@request.get("/show/me/404").body,"Not found")
+    @request.get("/").body.must_equal "Jekyll/Rack"
+    @request.get("/show/me/404").body.must_equal "Not found"
   end
 end
