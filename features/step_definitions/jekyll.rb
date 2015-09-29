@@ -1,5 +1,5 @@
-require_relative "../../lib/rack/jekyll/test"
 require "rack/mock"
+require_relative "../../lib/rack/jekyll/test"
 
 Given /^I have entered the path (.*)$/ do |path|
   @jekyll = Rack::Jekyll::Test.new
@@ -32,7 +32,7 @@ Then /^the data should show (.*)$/ do |body|
 end
 
 Then /^there should be no '(.*)' header$/ do |header|
-  assert_false @request.headers.has_key?(header)
+  refute @request.headers.has_key?(header)
 end
 
 def get(path, headers={})
