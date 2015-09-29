@@ -11,10 +11,9 @@ describe "Jekyll to Rack" do
 
   jekyll = Rack::Jekyll::Test.new
 
-  it "should be 200 and not 404" do
+  it "should be 200" do
     res = get(jekyll,"/")
     res.status.should.equal 200
-    res.status.should.not.equal 404
   end
 
   it "should be 11" do
@@ -32,9 +31,8 @@ describe "Jekyll to Rack" do
     res.body.should.equal "Jekyll/Rack"
   end
 
-  it "should be 404 and not 200" do
+  it "should be 404" do
     res = get(jekyll,"/show/me/404")
-    res.status.should.not.equal 200
     res.status.should.equal 404
   end
 
@@ -58,5 +56,4 @@ describe "Jekyll to Rack" do
     res = get(jekyll,"/js/test.min.js")
     res.headers["Content-Type"].should.equal "application/javascript"
   end
-
 end
