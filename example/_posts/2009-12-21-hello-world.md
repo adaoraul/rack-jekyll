@@ -1,6 +1,8 @@
 ---
 layout: post
-title: Hello World!
+title:  Hello World!
 ---
 
 # Hello World!
+
+A demo blog post for Rack-Jekyll.
