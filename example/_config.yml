@@ -1,4 +1,6 @@
 destination: _site
 permalink: /:year/:month/:day/:title
 markdown: kramdown
-pygments: true
+
+exclude:
+  - config.ru
