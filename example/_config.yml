@@ -1,4 +1,4 @@
 destination: _site
 permalink: /:year/:month/:day/:title
-markdown: rdiscount
+markdown: kramdown
 pygments: true

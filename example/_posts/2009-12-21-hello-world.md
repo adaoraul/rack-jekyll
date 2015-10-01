@@ -3,5 +3,4 @@ default: post
 title: Hello World!
 ---
 
-h1. Hello World!
-
+# Hello World!
