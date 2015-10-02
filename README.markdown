@@ -1,20 +1,20 @@
 Rack-Jekyll
 ===========
 
-Transform your [Jekyll](http://github.com/mojombo/jekyll) app
-into a [Rack](http://github.com/rack/rack) application.
+Transform your [Jekyll](https://jekyllrb.com/) app
+into a [Rack](https://github.com/rack/rack) application.
 
-- You can run it with rackup, [shotgun](http://github.com/rtomakyo/shotgun),
-  [unicorn](http://github.com/defunkt/unicorn), and more.
+- You can run it with rackup, [shotgun](https://github.com/rtomayko/shotgun),
+  [unicorn](http://unicorn.bogomips.org/), and more.
 - You can run Rack-Jekyll with any modified Jekyll.
-- You can deploy Rack-Jekyll on Heroku, EC2, Slicehost, Rackspace Cloud,
-  dedicated server, VPS, etc.
+- You can deploy Rack-Jekyll to Heroku, EC2, Rackspace,
+  dedicated servers, VPS, etc.
 
 
-### How to use it?
+## How to use it
 
 A `config.ru` file is required in order to run with shotgun and rackup.
-You can even deploy your Jekyll app to [Heroku](http://www.heroku.com/)!
+You can even deploy your Jekyll app to [Heroku](https://www.heroku.com/)!
 
 Copy this into `config.ru` in your Jekyll site's root directory:
 
@@ -26,17 +26,15 @@ run Rack::Jekyll.new
 
 That's it.
 
-Heroku is a [read-only filesystem](http://docs.heroku.com/constraints#read-only-filesystem):
-
-You need to generate pages and git-add pages and git-commit
-before you deploy your Jekyll to Heroku.
+Heroku provides a read-only filesystem, so you need to generate pages
+and git-commit them *before* you deploy your Jekyll site to Heroku.
 
  1. `cd` to your Jekyll directory
- 2. add `config.ru` file (see example above)
- 3. build pages, type: `jekyll`
- 4. `echo "rack-jekyll" > .gems`
+ 2. add a `config.ru` file (see example above)
+ 3. build pages with `jekyll build`
+ 4. add `gem "rack-jekyll"` to your `Gemfile`
  5. `git init && git add .`
- 6. `git commit -m "first heroku app"`
+ 6. `git commit -m "Initial commit"`
  7. `heroku create`
  8. `git push heroku master`
 
@@ -54,7 +52,7 @@ Example:
 run Rack::Jekyll.new(:destination => "mysite")
 ```
 
-Note that on read-only filesystems (like e.g. Heroku) a site build will fail,
+Note that on read-only filesystems a site build will fail,
 so do not set `:force_build => true` in these cases.
 
 
@@ -66,9 +64,14 @@ Read [Jekyll Configuration](http://jekyllrb.com/docs/configuration/).
 
 ## 404 page
 
-You can create a new file: `404.html` with YAML front matter.
-See my [Heroku Demo 404](http://bry4n.heroku.com/show/me/404/).
+In your site's root directory you can provide a custom `404.html` file
+with YAML front matter.
 
+
+## Contributing
+
+Contributions are more than just welcome.
+Fork this repo and create a new branch, then submit a pull request.
 
 
 ## Contributors
@@ -82,9 +85,3 @@ See my [Heroku Demo 404](http://bry4n.heroku.com/show/me/404/).
 * bemurphy (Brendon Murphy)
 * imajes (James Cox)
 * mattr- (Matt Rogers)
-
-
-## Contribution
-
-Contributions are more than just welcome.
-Fork this and create a new branch then open a pull request.
