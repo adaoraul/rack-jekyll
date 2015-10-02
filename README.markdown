@@ -50,13 +50,18 @@ You need to generate pages and git-add pages and git-commit before you deploy yo
 
 ## Initialization Options
 
-    :config               - use custom config file (default: "_config.yml")
-    :destination          - use custom destination path (default: "_site")
+    :config        - use given config file (default: "_config.yml")
+    :destination   - use given destination path (default: "_site")
+    :force_build   - whether to always generate the site at startup, even
+                     when the destination path is not empty (default: false)
 
 
 *Example:*
 
     run Rack::Jekyll.new(:destination => "mysite")
+
+Note that on read-only filesystems (like e.g. Heroku) a site build will fail,
+so do not set `:force_build => true` in these cases.
 
 
 ## YAML Config
@@ -67,6 +72,7 @@ rack-jekyll now can read the destination path from the `_config.yml` file. Read 
 ## 404 page
 
 You can create a new file: `404.html` with YAML Front Matter. See my [Heroku Demo 404](http://bry4n.heroku.com/show/me/404/).
+
 
 ## Contributors
 
@@ -79,6 +85,7 @@ You can create a new file: `404.html` with YAML Front Matter. See my [Heroku Dem
 * bemurphy (Brendon Murphy)
 * imajes (James Cox)
 * mattr- (Matt Rogers)
+
 
 ## Contribution
 

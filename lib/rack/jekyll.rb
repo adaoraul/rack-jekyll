@@ -12,6 +12,7 @@ module Rack
 
     def initialize(opts = {})
       @compiling = false
+      @force_build = opts.fetch(:force_build, false)
 
       config_file = opts[:config] || "_config.yml"
       if ::File.exist?(config_file)
@@ -26,9 +27,12 @@ module Rack
       options = ::Jekyll.configuration(opts)
       site = ::Jekyll::Site.new(options)
 
-      @compiling = true
-      site.process
-      @compiling = false
+      if ::Dir[@path + "/**/*"].empty? || @force_build
+        @compiling = true
+        puts "Generating site: #{options['source']} -> #{@path}"
+        site.process
+        @compiling = false
+      end
 
       if options['auto']
         require 'listen'
