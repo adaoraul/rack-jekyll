@@ -39,12 +39,10 @@ and git-commit them *before* you deploy your Jekyll site to Heroku.
  8. `git push heroku master`
 
 
-## Initialization Options
+## Configuration
 
-    :config        - use given config file (default: "_config.yml")
-    :destination   - use given destination path (default: "_site")
-    :force_build   - whether to always generate the site at startup, even
-                     when the destination path is not empty (default: false)
+Jekyll configuration options can be specified in a `_config.yml` file
+or as Rack-Jekyll initialization options in `config.ru`.
 
 Example:
 
@@ -52,14 +50,20 @@ Example:
 run Rack::Jekyll.new(:destination => "mysite")
 ```
 
+This will set a custom destination path (default: `_site`),
+possibly overwriting settings in the config file.
+
+See [Jekyll's configuration docs](https://jekyllrb.com/docs/configuration/)
+for more settings.
+
+Additional Rack-Jekyll initialization options:
+
+    :config        - use given config file (default: "_config.yml")
+    :force_build   - whether to always generate the site at startup, even
+                     when the destination path is not empty (default: false)
+
 Note that on read-only filesystems a site build will fail,
 so do not set `:force_build => true` in these cases.
-
-
-## YAML Config
-
-Rack-Jekyll now can read the destination path from the `_config.yml` file.
-Read [Jekyll Configuration](http://jekyllrb.com/docs/configuration/).
 
 
 ## 404 page
