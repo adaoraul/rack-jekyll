@@ -50,8 +50,8 @@ Example:
 run Rack::Jekyll.new(:destination => "mysite")
 ```
 
-This will set a custom destination path (default: `_site`),
-overriding settings from a config file.
+This will set a custom destination path, overriding the default (`_site`)
+and settings from a config file.
 
 See [Jekyll's configuration docs](https://jekyllrb.com/docs/configuration/)
 for more settings.
@@ -61,6 +61,7 @@ Additional Rack-Jekyll initialization options:
     :config        - use given config file (default: "_config.yml")
     :force_build   - whether to always generate the site at startup, even
                      when the destination path is not empty (default: false)
+    :auto          - whether to watch for changes and rebuild (default: false)
 
 Note that on read-only filesystems a site build will fail,
 so do not set `:force_build => true` in these cases.
