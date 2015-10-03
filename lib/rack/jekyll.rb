@@ -12,6 +12,18 @@ module Rack
 
     attr_reader :config
 
+    # Initializes a new Rack::Jekyll site.
+    #
+    # Options:
+    #
+    # +:config+::      use given config file (default: "_config.yml")
+    #
+    # +:force_build+:: whether to always generate the site at startup, even
+    #                  when the destination path is not empty (default: +false+)
+    #
+    # +:auto+::        whether to watch for changes and rebuild (default: +false+)
+    #
+    # Other options are passed on to Jekyll::Site.
     def initialize(opts = {})
       @compiling = false
       @force_build = opts.fetch(:force_build, false)
