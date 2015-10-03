@@ -51,7 +51,7 @@ run Rack::Jekyll.new(:destination => "mysite")
 ```
 
 This will set a custom destination path (default: `_site`),
-possibly overwriting settings in the config file.
+overriding settings from a config file.
 
 See [Jekyll's configuration docs](https://jekyllrb.com/docs/configuration/)
 for more settings.
