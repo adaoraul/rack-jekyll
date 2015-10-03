@@ -19,11 +19,12 @@ module Rack
       config_file = opts[:config] || "_config.yml"
       if ::File.exist?(config_file)
         config = YAML.load_file(config_file)
-
-        @path = config['destination'] || "_site"
-        @files = ::Dir[@path + "/**/*"].inspect
-        puts @files.inspect if ENV['RACK_DEBUG']
+        @path = config['destination']
       end
+      @path ||= "_site"
+
+      @files = ::Dir[@path + "/**/*"].inspect
+      puts @files.inspect if ENV['RACK_DEBUG']
 
       @mimes = Rack::Mime::MIME_TYPES.map{|k,v| /#{k.gsub('.','\.')}$/i }
       options = ::Jekyll.configuration(opts)
