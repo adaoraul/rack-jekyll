@@ -41,7 +41,7 @@ describe "when configuring site" do
     end
   end
 
-  describe "when _config.yml exists" do
+  describe "when using default config file" do
 
     it "loads the configuration from file" do
       begin
@@ -54,6 +54,23 @@ describe "when configuring site" do
         jekyll.config["config_file_opt"].must_equal "ok"
       ensure
         FileUtils.rm("_config.yml")
+      end
+    end
+  end
+
+  describe "when using custom config file" do
+
+    it "loads the configuration from file" do
+      begin
+        File.open("_my_config.yml", "w") do |f|
+          f.puts "config_file_opt: ok"
+        end
+
+        jekyll = new_rack_jekyll(:config => "_my_config.yml")
+        jekyll.config.must_include "config_file_opt"
+        jekyll.config["config_file_opt"].must_equal "ok"
+      ensure
+        FileUtils.rm("_my_config.yml")
       end
     end
   end
