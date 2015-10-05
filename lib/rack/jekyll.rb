@@ -47,6 +47,7 @@ module Rack
         @compiling = true
         puts "Generating site: #{@source} -> #{@destination}"
         site.process
+        @files = ::Dir[@destination + "/**/*"]
         @compiling = false
       end
 
@@ -87,7 +88,6 @@ module Rack
       while @compiling
         sleep 0.1
       end
-      @files = ::Dir[@destination + "/**/*"]  if @files == []
       if @files.inspect.include?(path_info)
         if path_info =~ /(\/?)$/
           if @mimes.collect {|regex| path_info =~ regex }.compact.empty?
