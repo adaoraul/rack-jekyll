@@ -1,6 +1,5 @@
 require "rack"
 require "jekyll"
-require "yaml"
 require "rack/request"
 require "rack/response"
 require File.join(File.dirname(__FILE__), 'jekyll', 'helpers')
@@ -28,21 +27,16 @@ module Rack
       @compiling = false
       @force_build = opts.fetch(:force_build, false)
 
-      config_file = opts[:config] || "_config.yml"
-      if ::File.exist?(config_file)
-        config = YAML.load_file(config_file)
-        @path = config['destination']
-      end
-      @path ||= "_site"
+      options = ::Jekyll.configuration(opts)
+      @config = options
+
+      @path = @config["destination"]
 
       @files = ::Dir[@path + "/**/*"].inspect
       puts @files.inspect if ENV['RACK_DEBUG']
 
       @mimes = Rack::Mime::MIME_TYPES.map{|k,v| /#{k.gsub('.','\.')}$/i }
-      options = ::Jekyll.configuration(opts)
       site = ::Jekyll::Site.new(options)
-
-      @config = options
 
       if ::Dir[@path + "/**/*"].empty? || @force_build
         @compiling = true

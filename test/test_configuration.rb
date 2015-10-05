@@ -38,7 +38,7 @@ describe "when configuring site" do
     it "loads the correct default destination" do
       jekyll = new_rack_jekyll
       jekyll.config["destination"].must_equal File.join(Dir.pwd, "_site")
-      jekyll.path.must_equal "_site"
+      jekyll.path.must_equal File.join(Dir.pwd, "_site")
     end
   end
 
