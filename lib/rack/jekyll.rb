@@ -10,7 +10,7 @@ require File.join(File.dirname(__FILE__), 'jekyll', 'ext')
 module Rack
   class Jekyll
 
-    attr_reader :config
+    attr_reader :config, :path
 
     # Initializes a new Rack::Jekyll site.
     #

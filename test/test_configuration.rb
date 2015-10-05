@@ -38,6 +38,7 @@ describe "when configuring site" do
     it "loads the correct default destination" do
       jekyll = new_rack_jekyll
       jekyll.config["destination"].must_equal File.join(Dir.pwd, "_site")
+      jekyll.path.must_equal "_site"
     end
   end
 
@@ -65,26 +66,49 @@ describe "when configuring site" do
       jekyll.config.must_include "init_opt"
       jekyll.config["init_opt"].must_equal "ok"
     end
+
+    it "has the correct destination" do
+      jekyll = new_rack_jekyll(:destination => "/project/_site")
+      jekyll.config["destination"].must_equal "/project/_site"
+    end
+
+    it "has the correct @path" do
+      jekyll = new_rack_jekyll(:destination => "/project/_site")
+      jekyll.path.must_equal "/project/_site"
+    end
   end
 
   describe "when initialization options are given and a config file exists" do
 
-    it "has all options and initialization options override file options" do
-      begin
-        File.open("_config.yml", "w") do |f|
-          f.puts "config_file_opt: ok"
-          f.puts "common_opt:      from config"
-        end
-
-        jekyll = new_rack_jekyll(:init_opt   => "ok",
-                                 :common_opt => "from init")
-        jekyll.config.must_include "init_opt"
-        jekyll.config.must_include "config_file_opt"
-        jekyll.config.must_include "common_opt"
-        jekyll.config["common_opt"].must_equal "from init"
-      ensure
-        FileUtils.rm("_config.yml")
+    before do
+      File.open("_config.yml", "w") do |f|
+        f.puts "config_file_opt: ok"
+        f.puts "common_opt:      from config"
+        f.puts "destination:     /project/_site_from_config"
       end
+    end
+
+    after do
+      FileUtils.rm("_config.yml")
+    end
+
+    it "has all options and initialization options override file options" do
+      jekyll = new_rack_jekyll(:init_opt   => "ok",
+                               :common_opt => "from init")
+      jekyll.config.must_include "init_opt"
+      jekyll.config.must_include "config_file_opt"
+      jekyll.config.must_include "common_opt"
+      jekyll.config["common_opt"].must_equal "from init"
+    end
+
+    it "has the correct destination" do
+      jekyll = new_rack_jekyll(:destination => "/project/_site_from_init")
+      jekyll.config["destination"].must_equal "/project/_site_from_init"
+    end
+
+    it "has the correct @path" do
+      jekyll = new_rack_jekyll(:destination => "/project/_site_from_init")
+      jekyll.path.must_equal "/project/_site_from_init"
     end
   end
 end
