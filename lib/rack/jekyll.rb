@@ -36,7 +36,7 @@ module Rack
       @destination = @config["destination"]
       @source      = @config["source"]
 
-      @files = ::Dir[@destination + "/**/*"].inspect
+      @files = ::Dir[@destination + "/**/*"]
       puts @files.inspect if ENV['RACK_DEBUG']
 
       @mimes = Rack::Mime::MIME_TYPES.map{|k,v| /#{k.gsub('.','\.')}$/i }
@@ -64,7 +64,7 @@ module Rack
           n = modified.length + added.length + removed.length
           puts "[#{t}] regeneration: #{n = modified.length + added.length + removed.length} files changed"
           site.process
-          @files = ::Dir[@destination + "/**/*"].inspect
+          @files = ::Dir[@destination + "/**/*"]
           @compiling = false
         end
         listener.start
@@ -87,8 +87,8 @@ module Rack
       while @compiling
         sleep 0.1
       end
-      @files = ::Dir[@destination + "/**/*"].inspect if @files == "[]"
-      if @files.include?(path_info)
+      @files = ::Dir[@destination + "/**/*"]  if @files == []
+      if @files.inspect.include?(path_info)
         if path_info =~ /(\/?)$/
           if @mimes.collect {|regex| path_info =~ regex }.compact.empty?
             path_info += $1.nil? ? "/index.html" : "index.html"
