@@ -1,6 +1,5 @@
 require "minitest/autorun"
 require "stringio"
-require "jekyll"
 require_relative "../lib/rack/jekyll"
 
 module Jekyll
@@ -9,7 +8,7 @@ module Jekyll
   end
 end
 
-TEST_DIR = File.expand_path("../tmp", __FILE__)
+TEST_DIR = File.expand_path("..", __FILE__)
 
 
 def new_rack_jekyll(options = {})
@@ -25,12 +24,13 @@ end
 describe "when configuring site" do
 
   before do
-    FileUtils.mkdir_p(TEST_DIR) unless File.exist?(TEST_DIR)
-    Dir.chdir(TEST_DIR)
+    @tempdir = File.join(TEST_DIR, "tmp")
+    FileUtils.mkdir_p(@tempdir)  unless File.exist?(@tempdir)
+    Dir.chdir(@tempdir)
   end
 
   after do
-    FileUtils.rmdir(TEST_DIR) if File.exist?(TEST_DIR)
+    FileUtils.rmdir(@tempdir)  if File.exist?(@tempdir)
   end
 
   describe "when no options are given and no config file exists" do
