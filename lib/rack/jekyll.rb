@@ -9,7 +9,7 @@ require File.join(File.dirname(__FILE__), 'jekyll', 'ext')
 module Rack
   class Jekyll
 
-    attr_reader :config, :path
+    attr_reader :config, :destination
 
     # Initializes a new Rack::Jekyll site.
     #
@@ -26,41 +26,42 @@ module Rack
     def initialize(opts = {})
       @compiling = false
       @force_build = opts.fetch(:force_build, false)
+      @auto = opts.fetch(:auto, false)
 
-      options = ::Jekyll.configuration(opts)
-      @config = options
+      @config = ::Jekyll.configuration(opts)
 
-      @path = @config["destination"]
+      @destination = @config["destination"]
+      @source      = @config["source"]
 
-      @files = ::Dir[@path + "/**/*"].inspect
+      @files = ::Dir[@destination + "/**/*"].inspect
       puts @files.inspect if ENV['RACK_DEBUG']
 
       @mimes = Rack::Mime::MIME_TYPES.map{|k,v| /#{k.gsub('.','\.')}$/i }
-      site = ::Jekyll::Site.new(options)
 
-      if ::Dir[@path + "/**/*"].empty? || @force_build
+      site = ::Jekyll::Site.new(@config)
+
+      if ::Dir[@destination + "/**/*"].empty? || @force_build
         @compiling = true
-        puts "Generating site: #{options['source']} -> #{@path}"
+        puts "Generating site: #{@source} -> #{@destination}"
         site.process
         @compiling = false
       end
 
-      if options['auto']
+      if @auto
         require 'listen'
         require 'pathname'
-        source = options['source']
-        destination = Pathname.new(options['destination'])
-                              .relative_path_from(Pathname.new(source))
+        rel_destination = Pathname.new(@destination)
+                              .relative_path_from(Pathname.new(@source))
                               .to_path
-        puts "Auto-regenerating enabled: #{source} -> #{destination}"
+        puts "Auto-regenerating enabled: #{@source} -> #{@destination}"
 
-        listener = Listen.to(source, :ignore => %r{#{Regexp.escape(destination)}}) do |modified, added, removed|
+        listener = Listen.to(@source, :ignore => %r{#{Regexp.escape(rel_destination)}}) do |modified, added, removed|
           @compiling = true
           t = Time.now.strftime("%Y-%m-%d %H:%M:%S")
           n = modified.length + added.length + removed.length
           puts "[#{t}] regeneration: #{n = modified.length + added.length + removed.length} files changed"
           site.process
-          @files = ::Dir[@path + "/**/*"].inspect
+          @files = ::Dir[@destination + "/**/*"].inspect
           @compiling = false
         end
         listener.start
@@ -83,7 +84,7 @@ module Rack
       while @compiling
         sleep 0.1
       end
-      @files = ::Dir[@path + "/**/*"].inspect if @files == "[]"
+      @files = ::Dir[@destination + "/**/*"].inspect if @files == "[]"
       if @files.include?(path_info)
         if path_info =~ /(\/?)$/
           if @mimes.collect {|regex| path_info =~ regex }.compact.empty?
@@ -92,7 +93,7 @@ module Rack
         end
         mime = mime(path_info)
 
-        file  = file_info(@path + path_info)
+        file  = file_info(@destination + path_info)
         body = file[:body]
         time = file[:time]
         hdrs = { 'Last-Modified'  => time }
@@ -106,7 +107,7 @@ module Rack
         end
 
       else
-        status, body, path_info = ::File.exist?(@path+"/404.html") ? [404,file_info(@path+"/404.html")[:body],"404.html"] : [404,"Not found","404.html"]
+        status, body, path_info = ::File.exist?(@destination+"/404.html") ? [404,file_info(@destination+"/404.html")[:body],"404.html"] : [404,"Not found","404.html"]
         mime = mime(path_info)
 
         [status, {"Content-Type" => mime, "Content-Length" => body.bytesize.to_s}, [body]]

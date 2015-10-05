@@ -37,8 +37,7 @@ describe "when configuring site" do
 
     it "loads the correct default destination" do
       jekyll = new_rack_jekyll
-      jekyll.config["destination"].must_equal File.join(Dir.pwd, "_site")
-      jekyll.path.must_equal File.join(Dir.pwd, "_site")
+      jekyll.destination.must_equal File.join(Dir.pwd, "_site")
     end
   end
 
@@ -69,12 +68,7 @@ describe "when configuring site" do
 
     it "has the correct destination" do
       jekyll = new_rack_jekyll(:destination => "/project/_site")
-      jekyll.config["destination"].must_equal "/project/_site"
-    end
-
-    it "has the correct @path" do
-      jekyll = new_rack_jekyll(:destination => "/project/_site")
-      jekyll.path.must_equal "/project/_site"
+      jekyll.destination.must_equal "/project/_site"
     end
   end
 
@@ -103,12 +97,7 @@ describe "when configuring site" do
 
     it "has the correct destination" do
       jekyll = new_rack_jekyll(:destination => "/project/_site_from_init")
-      jekyll.config["destination"].must_equal "/project/_site_from_init"
-    end
-
-    it "has the correct @path" do
-      jekyll = new_rack_jekyll(:destination => "/project/_site_from_init")
-      jekyll.path.must_equal "/project/_site_from_init"
+      jekyll.destination.must_equal "/project/_site_from_init"
     end
   end
 end
