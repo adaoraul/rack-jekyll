@@ -23,12 +23,15 @@ module Rack
     # +:auto+::        whether to watch for changes and rebuild (default: +false+)
     #
     # Other options are passed on to Jekyll::Site.
-    def initialize(opts = {})
+    def initialize(options = {})
+      overrides = options.dup
       @compiling = false
-      @force_build = opts.fetch(:force_build, false)
-      @auto = opts.fetch(:auto, false)
+      @force_build = overrides.fetch(:force_build, false)
+      @auto        = overrides.fetch(:auto, false)
 
-      @config = ::Jekyll.configuration(opts)
+      overrides.delete(:force_build)
+      overrides.delete(:auto)
+      @config = ::Jekyll.configuration(overrides)
 
       @destination = @config["destination"]
       @source      = @config["source"]

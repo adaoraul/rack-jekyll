@@ -87,6 +87,16 @@ describe "when configuring site" do
       jekyll = new_rack_jekyll(:destination => "/project/_site")
       jekyll.destination.must_equal "/project/_site"
     end
+
+    it ":auto is not passed on to Jekyll" do
+      jekyll = new_rack_jekyll(:auto => "ok")
+      jekyll.config.wont_include "auto"
+    end
+
+    it ":force_build is not passed on to Jekyll" do
+      jekyll = new_rack_jekyll(:force_build => "ok")
+      jekyll.config.wont_include "force_build"
+    end
   end
 
   describe "when initialization options are given and a config file exists" do
