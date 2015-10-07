@@ -2,22 +2,60 @@ require "minitest/autorun"
 require "stringio"
 require_relative "../lib/rack/jekyll"
 
-module Jekyll
-  class Site
-    def process; end  # prevent build
-  end
-end
-
 TEST_DIR = File.expand_path("..", __FILE__)
 
 
-def new_rack_jekyll(options = {})
+def silence_warnings
+  original_verbose, $VERBOSE = $VERBOSE, nil
+
+  yield
+ensure
+  $VERBOSE = original_verbose
+end
+
+def silence_output
   original_stderr, original_stdout = $stderr, $stdout
   $stderr, $stdout = StringIO.new, StringIO.new
-  rack_jekyll = Rack::Jekyll.new(options)
-  $stderr, $stdout = original_stderr, original_stdout
 
-  rack_jekyll
+  yield
+ensure
+  $stderr, $stdout = original_stderr, original_stdout
+end
+
+def without_processing
+  silence_warnings do
+    Jekyll::Site.class_eval do
+      alias :original_process :process
+      def process; end
+    end
+  end
+
+  yield
+ensure
+  silence_warnings do
+    Jekyll::Site.class_eval do
+      alias :process :original_process
+      remove_method :original_process
+    end
+  end
+end
+
+def rack_jekyll(options = {})
+  jekyll = nil
+  silence_output do
+    jekyll = Rack::Jekyll.new(options)
+  end
+
+  jekyll
+end
+
+def rack_jekyll_without_build(options = {})
+  jekyll = nil
+  without_processing do
+    jekyll = rack_jekyll(options)
+  end
+
+  jekyll
 end
 
 
@@ -36,7 +74,7 @@ describe "when configuring site" do
   describe "when no options are given and no config file exists" do
 
     it "loads the correct default destination" do
-      jekyll = new_rack_jekyll
+      jekyll = rack_jekyll_without_build
       jekyll.destination.must_equal File.join(Dir.pwd, "_site")
     end
   end
@@ -49,7 +87,7 @@ describe "when configuring site" do
           f.puts "config_file_opt: ok"
         end
 
-        jekyll = new_rack_jekyll
+        jekyll = rack_jekyll_without_build
         jekyll.config.must_include "config_file_opt"
         jekyll.config["config_file_opt"].must_equal "ok"
       ensure
@@ -66,7 +104,7 @@ describe "when configuring site" do
           f.puts "config_file_opt: ok"
         end
 
-        jekyll = new_rack_jekyll(:config => "_my_config.yml")
+        jekyll = rack_jekyll_without_build(:config => "_my_config.yml")
         jekyll.config.must_include "config_file_opt"
         jekyll.config["config_file_opt"].must_equal "ok"
       ensure
@@ -78,23 +116,23 @@ describe "when configuring site" do
   describe "when initialization options are given" do
 
     it "has the initialization options" do
-      jekyll = new_rack_jekyll(:init_opt => "ok")
+      jekyll = rack_jekyll_without_build(:init_opt => "ok")
       jekyll.config.must_include "init_opt"
       jekyll.config["init_opt"].must_equal "ok"
     end
 
     it "has the correct destination" do
-      jekyll = new_rack_jekyll(:destination => "/project/_site")
+      jekyll = rack_jekyll_without_build(:destination => "/project/_site")
       jekyll.destination.must_equal "/project/_site"
     end
 
     it ":auto is not passed on to Jekyll" do
-      jekyll = new_rack_jekyll(:auto => "ok")
+      jekyll = rack_jekyll_without_build(:auto => "ok")
       jekyll.config.wont_include "auto"
     end
 
     it ":force_build is not passed on to Jekyll" do
-      jekyll = new_rack_jekyll(:force_build => "ok")
+      jekyll = rack_jekyll_without_build(:force_build => "ok")
       jekyll.config.wont_include "force_build"
     end
   end
@@ -114,8 +152,8 @@ describe "when configuring site" do
     end
 
     it "has all options and initialization options override file options" do
-      jekyll = new_rack_jekyll(:init_opt   => "ok",
-                               :common_opt => "from init")
+      jekyll = rack_jekyll_without_build(:init_opt   => "ok",
+                                         :common_opt => "from init")
       jekyll.config.must_include "init_opt"
       jekyll.config.must_include "config_file_opt"
       jekyll.config.must_include "common_opt"
@@ -123,7 +161,7 @@ describe "when configuring site" do
     end
 
     it "has the correct destination" do
-      jekyll = new_rack_jekyll(:destination => "/project/_site_from_init")
+      jekyll = rack_jekyll_without_build(:destination => "/project/_site_from_init")
       jekyll.destination.must_equal "/project/_site_from_init"
     end
   end
