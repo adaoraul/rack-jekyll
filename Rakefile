@@ -9,7 +9,7 @@ task :default => :test
 
 desc "Run all tests"
 Rake::TestTask.new("test") do |t|
-  t.pattern = 'test/*.rb'
+  t.pattern = 'test/test_*.rb'
   t.verbose = true
   t.warning = true
 end

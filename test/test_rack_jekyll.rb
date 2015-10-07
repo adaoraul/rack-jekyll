@@ -1,5 +1,5 @@
-require "minitest/autorun"
-require "rack/mock"
+require_relative "helper"
+
 require_relative "../lib/rack/jekyll/test"
 
 describe Rack::Jekyll do
