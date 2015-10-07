@@ -1,7 +1,7 @@
 require_relative "helper"
 
 
-describe Rack::Jekyll do
+describe "when handling requests" do
 
   before do
     @tempdir = File.join(TEST_DIR, "tmp")
