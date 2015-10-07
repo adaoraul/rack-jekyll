@@ -3,7 +3,8 @@
 vendor/
 bin/
 .DS_Store
-example/_site
 Gemfile.lock
+example/_site
+test/tmp
 .ruby-version
 .ruby-gemset

@@ -1,5 +1,6 @@
 require "minitest/autorun"
 require "stringio"
+require "time"
 require "rack/mock"
 
 require_relative "../lib/rack/jekyll"
