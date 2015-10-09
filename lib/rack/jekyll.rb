@@ -36,7 +36,7 @@ module Rack
       @destination = @config["destination"]
       @source      = @config["source"]
 
-      @files = ::Dir[@destination + "/**/*"]
+      load_file_list
       puts @files.inspect if ENV['RACK_DEBUG']
 
       @mimes = Rack::Mime::MIME_TYPES.map{|k,v| /#{k.gsub('.','\.')}$/i }
@@ -47,7 +47,7 @@ module Rack
         @compiling = true
         puts "Generating site: #{@source} -> #{@destination}"
         site.process
-        @files = ::Dir[@destination + "/**/*"]
+        load_file_list
         @compiling = false
       end
 
@@ -65,7 +65,7 @@ module Rack
           n = modified.length + added.length + removed.length
           puts "[#{t}] regeneration: #{n = modified.length + added.length + removed.length} files changed"
           site.process
-          @files = ::Dir[@destination + "/**/*"]
+          load_file_list
           @compiling = false
         end
         listener.start
@@ -115,6 +115,12 @@ module Rack
 
         [status, {"Content-Type" => mime, "Content-Length" => body.bytesize.to_s}, [body]]
       end
+    end
+
+    private
+
+    def load_file_list
+      @files = ::Dir[@destination + "/**/*"]
     end
   end
 end
