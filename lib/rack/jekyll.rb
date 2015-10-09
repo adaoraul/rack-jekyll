@@ -41,12 +41,13 @@ module Rack
 
       @mimes = Rack::Mime::MIME_TYPES.map{|k,v| /#{k.gsub('.','\.')}$/i }
 
-      site = ::Jekyll::Site.new(@config)
+      @site = ::Jekyll::Site.new(@config)
 
       if ::Dir[@destination + "/**/*"].empty? || @force_build
+        message = "Generating site: #{@source} -> #{@destination}"
         @compiling = true
-        puts "Generating site: #{@source} -> #{@destination}"
-        site.process
+        puts message
+        @site.process
         load_file_list
         @compiling = false
       end
@@ -60,11 +61,12 @@ module Rack
         puts "Auto-regenerating enabled: #{@source} -> #{@destination}"
 
         listener = Listen.to(@source, :ignore => %r{#{Regexp.escape(rel_destination)}}) do |modified, added, removed|
-          @compiling = true
           t = Time.now.strftime("%Y-%m-%d %H:%M:%S")
           n = modified.length + added.length + removed.length
-          puts "[#{t}] regeneration: #{n = modified.length + added.length + removed.length} files changed"
-          site.process
+          message = "[#{t}] regeneration: #{n} files changed"
+          @compiling = true
+          puts message
+          @site.process
           load_file_list
           @compiling = false
         end
