@@ -61,4 +61,12 @@ def rack_jekyll_without_build(options = {})
   jekyll
 end
 
+def file_must_exist(filename)
+  assert File.exist?(filename),
+         "Expected file `#{filename}' to exist."
+end
 
+def file_wont_exist(filename)
+  assert !File.exist?(filename),
+         "Expected file `#{filename}' to not exist."
+end
