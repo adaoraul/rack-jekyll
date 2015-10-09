@@ -44,12 +44,7 @@ module Rack
       @site = ::Jekyll::Site.new(@config)
 
       if ::Dir[@destination + "/**/*"].empty? || @force_build
-        message = "Generating site: #{@source} -> #{@destination}"
-        @compiling = true
-        puts message
-        @site.process
-        load_file_list
-        @compiling = false
+        process("Generating site: #{@source} -> #{@destination}")
       end
 
       if @auto
@@ -63,12 +58,7 @@ module Rack
         listener = Listen.to(@source, :ignore => %r{#{Regexp.escape(rel_destination)}}) do |modified, added, removed|
           t = Time.now.strftime("%Y-%m-%d %H:%M:%S")
           n = modified.length + added.length + removed.length
-          message = "[#{t}] regeneration: #{n} files changed"
-          @compiling = true
-          puts message
-          @site.process
-          load_file_list
-          @compiling = false
+          process("[#{t}] regeneration: #{n} files changed")
         end
         listener.start
       end
@@ -123,6 +113,14 @@ module Rack
 
     def load_file_list
       @files = ::Dir[@destination + "/**/*"]
+    end
+
+    def process(message = nil)
+      @compiling = true
+      puts message  if message
+      @site.process
+      load_file_list
+      @compiling = false
     end
   end
 end
