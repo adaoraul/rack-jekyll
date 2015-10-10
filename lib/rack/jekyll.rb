@@ -51,12 +51,17 @@ module Rack
         require 'listen'
         require 'listen/version'
         require 'pathname'
-        rel_destination = Pathname.new(@destination)
-                              .relative_path_from(Pathname.new(@source))
-                              .to_path
+
         puts "Auto-regeneration enabled: #{@source} -> #{@destination}"
 
-        listener = Listen.to(@source, :ignore => %r{#{Regexp.escape(rel_destination)}}) do |modified, added, removed|
+        source_abs = ::File.expand_path(@source)
+        dest_abs   = ::File.expand_path(@destination)
+        relative_path_to_dest = Pathname.new(dest_abs)
+                                .relative_path_from(Pathname.new(source_abs))
+                                .to_path
+        ignore_pattern = %r{#{Regexp.escape(relative_path_to_dest)}}
+
+        listener = Listen.to(@source, :ignore => ignore_pattern) do |modified, added, removed|
           t = Time.now.strftime("%Y-%m-%d %H:%M:%S")
           n = modified.length + added.length + removed.length
           process("[#{t}] Regenerating: #{n} file(s) changed")
