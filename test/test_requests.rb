@@ -1,3 +1,5 @@
+# encoding: UTF-8
+
 require_relative "helper"
 
 
@@ -69,5 +71,21 @@ describe "when handling requests" do
   it "should return correct body" do
     @request.get("/").body.must_equal "<p>Rack-Jekyll Test</p>\n"
     @request.get("/show/me/404").body.must_equal "Not found"
+  end
+
+
+  describe "when page contains multibyte characters" do
+
+    before do
+      @response = @request.get("/buenos_dias.html")
+    end
+
+    it "should return correct body" do
+      @response.body.must_equal "<p>¡Buenos días!</p>\n"
+    end
+
+    it "should return the bytesize as Content-Length header" do
+      @response.original_headers["Content-Length"].to_i.must_equal 23
+    end
   end
 end
