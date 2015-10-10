@@ -57,13 +57,13 @@ describe "when handling requests" do
   end
 
   it "should return correct Content-Length header" do
-    @request.get("/").headers["Content-Length"].to_i.must_equal 24
-    @request.get("/show/me/404").headers["Content-Length"].to_i.must_equal 9
+    @request.get("/").original_headers["Content-Length"].to_i.must_equal 24
+    @request.get("/show/me/404").original_headers["Content-Length"].to_i.must_equal 9
   end
 
   it "should return correct Content-Length header for If-Modified-Since" do
     modify_time = @request.get("/").headers["Last-Modified"]
-    @request.get("/", {"HTTP_IF_MODIFIED_SINCE" => modify_time}).headers["Content-Length"].must_be_nil
+    @request.get("/", {"HTTP_IF_MODIFIED_SINCE" => modify_time}).original_headers["Content-Length"].must_be_nil
   end
 
   it "should return correct body" do
