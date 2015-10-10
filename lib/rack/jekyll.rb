@@ -49,6 +49,7 @@ module Rack
 
       if @auto
         require 'listen'
+        require 'listen/version'
         require 'pathname'
         rel_destination = Pathname.new(@destination)
                               .relative_path_from(Pathname.new(@source))
@@ -60,7 +61,7 @@ module Rack
           n = modified.length + added.length + removed.length
           process("[#{t}] Regenerating: #{n} file(s) changed")
         end
-        listener.start
+        listener.start  unless Listen::VERSION =~ /\A[0-1]\./
       end
     end
 
