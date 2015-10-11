@@ -70,15 +70,6 @@ module Rack
       end
     end
 
-    def globs(source)
-      Dir.chdir(source) do
-        dirs = Dir['*'].select { |x| Pathname(x).directory? }
-        dirs -= ['_site']
-        dirs = dirs.map { |x| "#{x}/**/*" }
-        dirs += ['*']
-      end
-    end
-
     def call(env)
       @request = Rack::Request.new(env)
       @response = Rack::Response.new

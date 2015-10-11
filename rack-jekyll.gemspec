@@ -23,7 +23,7 @@ Gem::Specification.new do |s|
              LICENSE
            } +
            Dir.glob("lib/**/*")
- s.test_files = Dir.glob("{test,spec,features}/**/*")
+ s.test_files = Dir.glob("{test,features}/**/*")
  s.require_paths = ["lib"]
 
  s.extra_rdoc_files = ["README.markdown"]
