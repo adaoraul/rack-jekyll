@@ -7,8 +7,7 @@ require_relative 'lib/rack/jekyll'
 
 task :default => :test
 
-desc "Run all tests"
-Rake::TestTask.new("test") do |t|
+Rake::TestTask.new do |t|
   t.pattern = 'test/test_*.rb'
   t.verbose = true
   t.warning = true
@@ -20,11 +19,11 @@ task :build do
 end
 
 desc "Install gem"
-task :install do
-  sh "sudo gem install rack-jekyll-#{Rack::Jekyll.version}.gem"
+task :install => :build do
+  sh "gem install rack-jekyll-#{Rack::Jekyll.version}.gem"
 end
 
-desc "Push to rubygems.org"
+desc "Push gem to rubygems.org"
 task :push do
   sh "gem push rack-jekyll-#{Rack::Jekyll.version}.gem"
 end
