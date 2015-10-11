@@ -90,3 +90,4 @@ Fork this repo and create a new branch, then submit a pull request.
 * bemurphy (Brendon Murphy)
 * imajes (James Cox)
 * mattr- (Matt Rogers)
+* stomar (Marcus Stollsteimer)
