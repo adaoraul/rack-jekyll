@@ -8,12 +8,12 @@ Feature: Rack-Jekyll
     When I request a page
     Then the http status should be 200
     Then the content-type should be text/html
-    And the content-length should be 11
-    And the data should show Jekyll/Rack
+    And the content-length should be 24
+    And the data should show <p>Rack-Jekyll Test</p>
 
   Scenario: Request 304 page
     Given I have entered the path /
-    When I request a page with a date of 'Thu, 01 Apr 2010 15:27:52 GMT'
+    When I request a page with a date of Last-Modified
     Then the http status should be 304
     And there should be no 'Content-Length' header
 
