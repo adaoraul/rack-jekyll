@@ -30,12 +30,26 @@ describe "when handling requests" do
     @request.wont_be_nil
   end
 
-  it "should return correct http status code" do
+  it "should return status 200 for existing path" do
     @request.get("/").status.must_equal 200
+    @request.get("/2015/10/05/hello-world.html").status.must_equal 200
+  end
+
+  it "should return status 404 for nonexistent path" do
     @request.get("/show/me/404").status.must_equal 404
   end
 
-  it "should return correct http status code for If-Modified-Since" do
+  it "should return status 404 for partially matching path 1" do
+    skip
+    @request.get("/2015/10/05/hello").status.must_equal 404
+  end
+
+  it "should return status 404 for partially matching path 2" do
+    skip
+    @request.get("/10/05/hello-world.html").status.must_equal 404
+  end
+
+  it "should return correct status code for If-Modified-Since" do
     modify_time = @request.get("/").headers["Last-Modified"]
     earlier_time = (Time.parse(modify_time) - 3600).httpdate
 
@@ -43,7 +57,7 @@ describe "when handling requests" do
     @request.get("/", {"HTTP_IF_MODIFIED_SINCE" => earlier_time}).status.must_equal 200
   end
 
-  it "should return correct http status code for If-Modified-Since with 404s" do
+  it "should return correct status code for If-Modified-Since with 404s" do
     modify_time = @request.get("/").headers["Last-Modified"]
     earlier_time = (Time.parse(modify_time) - 3600).httpdate
 
@@ -71,6 +85,44 @@ describe "when handling requests" do
   it "should return correct body" do
     @request.get("/").body.must_equal "<p>Rack-Jekyll Test</p>\n"
     @request.get("/show/me/404").body.must_equal "Not found"
+  end
+
+
+  describe "when a directory is requested" do
+
+    it "should redirect with status 301 to 'directory/' for 'directory' with index.html" do
+      skip
+      @request.get("/dir-with-index").status.must_equal 301
+      @request.get("/dir-with-index").headers["Location"].must_equal "/dir-with-index/"
+    end
+
+    it "should return status 200 for 'directory/' with index.html" do
+      @request.get("/dir-with-index/").status.must_equal 200
+    end
+
+    it "should return status 404 for 'directory' without index.html" do
+      skip
+      @request.get("/dir-without-index").status.must_equal 404
+    end
+
+    it "should return status 404 for 'directory/' without index.html" do
+      skip
+      @request.get("/dir-without-index/").status.must_equal 404
+    end
+  end
+
+
+  describe "when a resource of unknown mime type is requested" do
+
+    it "should return status 200" do
+      skip
+      @request.get("/no-extension").status.must_equal 200
+    end
+
+    it "should return Content-Type 'application/octet-stream'" do
+      skip
+      @request.get("/no-extension").headers["Content-Type"].must_equal "application/octet-stream"
+    end
   end
 
 
