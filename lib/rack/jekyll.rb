@@ -75,37 +75,41 @@ module Rack
         sleep 0.1
       end
 
-      @request = Rack::Request.new(env)
-      @response = Rack::Response.new
-      path_info = @request.path_info
+      request = Rack::Request.new(env)
+
+      path_info = request.path_info
 
       if @files.inspect.include?(path_info)
-        if path_info =~ /(\/?)$/
-          if @mimes.collect {|regex| path_info =~ regex }.compact.empty?
-            path_info += $1.nil? ? "/index.html" : "index.html"
-          end
+        if @mimes.collect {|regex| path_info =~ regex }.compact.empty?
+          path_info = ::File.join(path_info, "index.html")
         end
         mime = mime(path_info)
 
         file  = file_info(@destination + path_info)
         body = file[:body]
         time = file[:time]
-        hdrs = { 'Last-Modified'  => time }
+        hdrs = { "Last-Modified" => time }
 
-        if time == @request.env['HTTP_IF_MODIFIED_SINCE']
-          [304, hdrs, []]
+        if time == request.env["HTTP_IF_MODIFIED_SINCE"]
+          response = [304, hdrs, []]
         else
-          hdrs.update({ 'Content-Length' => body.bytesize.to_s,
-                        'Content-Type'   => mime, } )
-          [@response.status, hdrs, [body]]
+          hdrs.update({ "Content-Length" => body.bytesize.to_s,
+                        "Content-Type"   => mime })
+          response = [200, hdrs, [body]]
         end
 
       else
-        status, body, path_info = ::File.exist?(@destination+"/404.html") ? [404,file_info(@destination+"/404.html")[:body],"404.html"] : [404,"Not found","404.html"]
-        mime = mime(path_info)
-
-        [status, {"Content-Type" => mime, "Content-Length" => body.bytesize.to_s}, [body]]
+        body = if ::File.exist?(@destination + "/404.html")
+                 file_info(@destination + "/404.html")[:body]
+               else
+                 "Not found"
+               end
+        hdrs = { "Content-Length" => body.bytesize.to_s,
+                 "Content-Type"   => "text/html" }
+        response = [404, hdrs, [body]]
       end
+
+      response
     end
 
     private
