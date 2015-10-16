@@ -71,12 +71,14 @@ module Rack
     end
 
     def call(env)
-      @request = Rack::Request.new(env)
-      @response = Rack::Response.new
-      path_info = @request.path_info
       while @compiling
         sleep 0.1
       end
+
+      @request = Rack::Request.new(env)
+      @response = Rack::Response.new
+      path_info = @request.path_info
+
       if @files.inspect.include?(path_info)
         if path_info =~ /(\/?)$/
           if @mimes.collect {|regex| path_info =~ regex }.compact.empty?
