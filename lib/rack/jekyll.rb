@@ -77,15 +77,12 @@ module Rack
 
       request = Rack::Request.new(env)
 
-      path_info = request.path_info
+      filename = get_filename(request.path_info)
 
-      if @files.inspect.include?(path_info)
-        if @mimes.collect {|regex| path_info =~ regex }.compact.empty?
-          path_info = ::File.join(path_info, "index.html")
-        end
-        mime = mime(path_info)
+      if filename
+        mime = mime(filename)
 
-        file  = file_info(@destination + path_info)
+        file  = file_info(filename)
         body = file[:body]
         time = file[:time]
         hdrs = { "Last-Modified" => time }
@@ -124,6 +121,22 @@ module Rack
       @site.process
       load_file_list
       @compiling = false
+    end
+
+    def get_filename(path)
+      if @mimes.collect {|regex| path =~ regex }.compact.empty?
+        normalized = ::File.join(path, "index.html")
+      else
+        normalized = path.dup
+      end
+
+      if @files.inspect.include?(normalized)
+        filename = ::File.join(@destination, normalized)
+      else
+        filename = nil
+      end
+
+      filename
     end
   end
 end
