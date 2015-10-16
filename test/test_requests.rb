@@ -100,12 +100,10 @@ describe "when handling requests" do
     end
 
     it "should return status 404 for 'directory' without index.html" do
-      skip
       @request.get("/dir-without-index").status.must_equal 404
     end
 
     it "should return status 404 for 'directory/' without index.html" do
-      skip
       @request.get("/dir-without-index/").status.must_equal 404
     end
   end
