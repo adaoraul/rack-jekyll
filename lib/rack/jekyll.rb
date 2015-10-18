@@ -113,6 +113,7 @@ module Rack
 
     def load_file_list
       @files = ::Dir[@destination + "/**/*"]
+      @files.delete_if {|file| ::FileTest.directory?(file) }
     end
 
     def process(message = nil)
