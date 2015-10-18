@@ -35,7 +35,6 @@ describe "when mapping paths to files" do
     end
 
     it "should return nil for partially matching paths" do
-      skip
       @filehandler.get_filename("/dir1/dir2/").must_be_nil
       @filehandler.get_filename("/dir2/dir3").must_be_nil
       @filehandler.get_filename("ir1/di").must_be_nil

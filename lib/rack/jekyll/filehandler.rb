@@ -23,14 +23,16 @@ module Rack
       # Returns the full file system path of the file corresponding to
       # the given URL path, or +nil+ if no corresponding file exists.
       def get_filename(path)
-        if @mimes.collect {|regex| path =~ regex }.compact.empty?
-          normalized = ::File.join(path, "index.html")
+        fullpath = ::File.join(@root, path)
+
+        if @mimes.collect {|regex| fullpath =~ regex }.compact.empty?
+          normalized = ::File.join(fullpath, "index.html")
         else
-          normalized = path.dup
+          normalized = fullpath
         end
 
-        if @files.inspect.include?(normalized)
-          filename = ::File.join(@root, normalized)
+        if @files.include?(normalized)
+          filename = normalized
         else
           filename = nil
         end

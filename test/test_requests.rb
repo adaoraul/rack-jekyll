@@ -44,7 +44,6 @@ describe "when handling requests" do
   end
 
   it "should return status 404 for partially matching path 2" do
-    skip
     @request.get("/10/05/hello-world.html").status.must_equal 404
   end
 
