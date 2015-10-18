@@ -9,7 +9,6 @@ module Rack
       def initialize(root, files = nil)
         @root = ::File.expand_path(root)
         @files = files || get_file_list
-        @mimes = Rack::Mime::MIME_TYPES.map{|k,v| /#{k.gsub('.','\.')}$/i }
       end
 
       def empty?
@@ -25,8 +24,10 @@ module Rack
       def get_filename(path)
         fullpath = ::File.join(@root, path)
 
-        if @mimes.collect {|regex| fullpath =~ regex }.compact.empty?
-          normalized = ::File.join(fullpath, "index.html")
+        if fullpath.end_with?("/")
+          normalized = fullpath + "index.html"
+        elsif !@files.include?(fullpath)
+          normalized = fullpath + "/index.html"
         else
           normalized = fullpath
         end

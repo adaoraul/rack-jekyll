@@ -111,7 +111,6 @@ describe "when handling requests" do
   describe "when a resource of unknown mime type is requested" do
 
     it "should return status 200" do
-      skip
       @request.get("/no-extension").status.must_equal 200
     end
 

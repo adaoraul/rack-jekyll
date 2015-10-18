@@ -30,7 +30,6 @@ describe "when mapping paths to files" do
     end
 
     it "should return existing path for resource without extension" do
-      skip
       @filehandler.get_filename("/README").must_equal "/site/README"
     end
 
