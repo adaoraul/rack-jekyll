@@ -2,6 +2,7 @@ require "rack"
 require "jekyll"
 require "rack/request"
 require "rack/response"
+require File.join(File.dirname(__FILE__), 'jekyll', 'filehandler')
 require File.join(File.dirname(__FILE__), 'jekyll', 'helpers')
 require File.join(File.dirname(__FILE__), 'jekyll', 'version')
 require File.join(File.dirname(__FILE__), 'jekyll', 'ext')
@@ -36,14 +37,10 @@ module Rack
       @destination = @config["destination"]
       @source      = @config["source"]
 
-      load_file_list
-      puts @files.inspect if ENV['RACK_DEBUG']
-
-      @mimes = Rack::Mime::MIME_TYPES.map{|k,v| /#{k.gsub('.','\.')}$/i }
-
+      @files = FileHandler.new(@destination)
       @site = ::Jekyll::Site.new(@config)
 
-      if ::Dir[@destination + "/**/*"].empty? || @force_build
+      if @files.empty? || @force_build
         process("Generating site: #{@source} -> #{@destination}")
       end
 
@@ -77,7 +74,7 @@ module Rack
 
       request = Rack::Request.new(env)
 
-      filename = get_filename(request.path_info)
+      filename = @files.get_filename(request.path_info)
 
       if filename
         mime = mime(filename)
@@ -111,33 +108,12 @@ module Rack
 
     private
 
-    def load_file_list
-      @files = ::Dir[@destination + "/**/*"]
-      @files.delete_if {|file| ::FileTest.directory?(file) }
-    end
-
     def process(message = nil)
       @compiling = true
       puts message  if message
       @site.process
-      load_file_list
+      @files.update
       @compiling = false
-    end
-
-    def get_filename(path)
-      if @mimes.collect {|regex| path =~ regex }.compact.empty?
-        normalized = ::File.join(path, "index.html")
-      else
-        normalized = path.dup
-      end
-
-      if @files.inspect.include?(normalized)
-        filename = ::File.join(@destination, normalized)
-      else
-        filename = nil
-      end
-
-      filename
     end
   end
 end
