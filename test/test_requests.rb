@@ -115,7 +115,6 @@ describe "when handling requests" do
     end
 
     it "should return Content-Type 'application/octet-stream'" do
-      skip
       @request.get("/no-extension").headers["Content-Type"].must_equal "application/octet-stream"
     end
   end
