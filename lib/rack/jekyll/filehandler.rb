@@ -43,6 +43,8 @@ module Rack
 
       private
 
+      # Retrieves and returns a list of all files in the root directory
+      # (excluding directory names).
       def get_file_list
         files = ::Dir[@root + "/**/*"]
         files.delete_if {|file| ::FileTest.directory?(file) }
