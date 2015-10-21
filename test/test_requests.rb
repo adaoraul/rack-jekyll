@@ -70,9 +70,8 @@ describe "when handling requests" do
     @request.get("/show/me/404").headers["Content-Type"].must_equal "text/html"
   end
 
-  it "should return correct Content-Length header" do
+  it "should return correct Content-Length header for '/'" do
     @request.get("/").original_headers["Content-Length"].to_i.must_equal 24
-    @request.get("/show/me/404").original_headers["Content-Length"].to_i.must_equal 9
   end
 
   it "should return correct Content-Length header for If-Modified-Since" do
@@ -80,9 +79,8 @@ describe "when handling requests" do
     @request.get("/", {"HTTP_IF_MODIFIED_SINCE" => modify_time}).original_headers["Content-Length"].must_be_nil
   end
 
-  it "should return correct body" do
+  it "should return correct body for '/'" do
     @request.get("/").body.must_equal "<p>Rack-Jekyll Test</p>\n"
-    @request.get("/show/me/404").body.must_equal "Not found"
   end
 
 
@@ -132,6 +130,34 @@ describe "when handling requests" do
 
     it "should return the bytesize as Content-Length header" do
       @response.original_headers["Content-Length"].to_i.must_equal 23
+    end
+  end
+
+
+  describe "when returning 404s" do
+
+    it "should return correct body for default 404" do
+      @request.get("/show/me/404").body.must_equal "Not found"
+    end
+
+    it "should return correct Content-Length header for default 404" do
+      @request.get("/show/me/404").original_headers["Content-Length"].to_i.must_equal 9
+    end
+
+    it "should return correct body for custom 404" do
+      begin
+        filename = File.join(@sourcedir, "404.html")
+        File.open(filename, "w") {|f| f.puts "Custom 404" }
+
+        jekyll = rack_jekyll(:force_build => true,
+                             :source      => @sourcedir,
+                             :destination => @destdir)
+        request = Rack::MockRequest.new(jekyll)
+
+        request.get("/show/me/404").body.must_match /Custom 404/
+      ensure
+        FileUtils.rm(filename)
+      end
     end
   end
 end
