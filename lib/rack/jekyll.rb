@@ -93,8 +93,10 @@ module Rack
         end
 
       else
-        body = if ::File.exist?(@destination + "/404.html")
-                 file_info(@destination + "/404.html")[:body]
+        custom_404_file = @files.get_filename("/404.html")
+
+        body = if custom_404_file
+                 file_info(custom_404_file)[:body]
                else
                  "Not found"
                end
