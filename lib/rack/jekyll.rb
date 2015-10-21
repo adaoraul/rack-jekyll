@@ -93,13 +93,7 @@ module Rack
         end
 
       else
-        custom_404_file = @files.get_filename("/404.html")
-
-        body = if custom_404_file
-                 file_info(custom_404_file)[:body]
-               else
-                 "Not found"
-               end
+        body = not_found_message
         hdrs = { "Content-Length" => body.bytesize.to_s,
                  "Content-Type"   => "text/html" }
         response = [404, hdrs, [body]]
@@ -116,6 +110,20 @@ module Rack
       @site.process
       @files.update
       @compiling = false
+    end
+
+    def not_found_message
+      custom_404 || default_404
+    end
+
+    def default_404
+      "Not found"
+    end
+
+    def custom_404
+      filename = @files.get_filename("/404.html")
+
+      filename ? file_info(filename)[:body] : nil
     end
   end
 end
