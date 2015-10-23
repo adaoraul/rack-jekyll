@@ -154,7 +154,7 @@ describe "when handling requests" do
                              :destination => @destdir)
         request = Rack::MockRequest.new(jekyll)
 
-        request.get("/show/me/404").body.must_match /Custom 404/
+        request.get("/show/me/404").body.must_match %r{Custom 404}
       ensure
         FileUtils.rm(filename)
       end
