@@ -99,7 +99,7 @@ module Rack
         response = [404, hdrs, [body]]
       end
 
-      response
+      request.head? ? remove_body(response) : response
     end
 
     private
@@ -124,6 +124,12 @@ module Rack
       filename = @files.get_filename("/404.html")
 
       filename ? file_info(filename)[:body] : nil
+    end
+
+    def remove_body(response)
+      status, headers, body = response
+
+      [status, headers, []]
     end
   end
 end
