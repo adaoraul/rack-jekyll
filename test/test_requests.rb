@@ -160,4 +160,20 @@ describe "when handling requests" do
       end
     end
   end
+
+
+  describe "when handling HEAD requests" do
+
+    it "should return status 200 for '/'" do
+      @request.head("/").status.must_equal 200
+    end
+
+    it "should return correct Content-Length header for '/'" do
+      @request.head("/").original_headers["Content-Length"].to_i.must_equal 24
+    end
+
+    it "should not return a body" do
+      @request.head("/").body.must_equal ""
+    end
+  end
 end
