@@ -22,7 +22,8 @@ Gem::Specification.new do |s|
              Rakefile
              LICENSE
            } +
-           Dir.glob("lib/**/*")
+           Dir.glob("lib/**/*") +
+           Dir.glob("example/**/*").reject {|f| f =~ %r(\Aexample/_site/) }
  s.test_files = Dir.glob("{test,features}/**/*")
  s.require_paths = ["lib"]
 
