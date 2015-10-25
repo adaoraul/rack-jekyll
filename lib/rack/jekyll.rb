@@ -4,7 +4,6 @@ require "jekyll"
 require File.join(File.dirname(__FILE__), 'jekyll', 'filehandler')
 require File.join(File.dirname(__FILE__), 'jekyll', 'helpers')
 require File.join(File.dirname(__FILE__), 'jekyll', 'version')
-require File.join(File.dirname(__FILE__), 'jekyll', 'ext')
 
 module Rack
   class Jekyll
