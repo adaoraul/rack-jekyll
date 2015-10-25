@@ -1,4 +1,4 @@
-require File.expand_path("../../lib/rack/jekyll", __FILE__)
+require_relative "../lib/rack/jekyll"
 
 # Middleware
 use Rack::ShowExceptions  # Nice looking errors
