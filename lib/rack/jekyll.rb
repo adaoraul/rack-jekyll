@@ -127,7 +127,7 @@ module Rack
     end
 
     def remove_body(response)
-      status, headers, body = response
+      status, headers, _body = response
 
       [status, headers, []]
     end
