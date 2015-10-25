@@ -2,7 +2,9 @@
 layout: default
 ---
 
-# Blog Posts
+# Rack-Jekyll Demo
+
+Blog posts:
 
 <ul>
   {% for post in site.posts %}
