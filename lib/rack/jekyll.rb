@@ -2,7 +2,7 @@ require "rack"
 require "jekyll"
 
 require_relative "jekyll/filehandler"
-require_relative "jekyll/helpers"
+require_relative "jekyll/utils"
 require_relative "jekyll/version"
 
 module Rack
@@ -75,9 +75,9 @@ module Rack
       filename = @files.get_filename(request.path_info)
 
       if filename
-        mime = mime(filename)
+        media_type = Utils.media_type(filename)
 
-        file  = file_info(filename)
+        file = Utils.file_info(filename)
         body = file[:body]
         time = file[:time]
         hdrs = { "Last-Modified" => time }
@@ -86,7 +86,7 @@ module Rack
           response = [304, hdrs, []]
         else
           hdrs.update({ "Content-Length" => body.bytesize.to_s,
-                        "Content-Type"   => mime })
+                        "Content-Type"   => media_type })
           response = [200, hdrs, [body]]
         end
 
@@ -121,7 +121,7 @@ module Rack
     def custom_404
       filename = @files.get_filename("/404.html")
 
-      filename ? file_info(filename)[:body] : nil
+      filename ? Utils.file_info(filename)[:body] : nil
     end
 
     def remove_body(response)
