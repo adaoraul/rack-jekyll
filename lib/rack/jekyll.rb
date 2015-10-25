@@ -1,7 +1,6 @@
 require "rack"
 require "jekyll"
-require "rack/request"
-require "rack/response"
+
 require File.join(File.dirname(__FILE__), 'jekyll', 'filehandler')
 require File.join(File.dirname(__FILE__), 'jekyll', 'helpers')
 require File.join(File.dirname(__FILE__), 'jekyll', 'version')
