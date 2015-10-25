@@ -30,6 +30,8 @@ Gem::Specification.new do |s|
  s.extra_rdoc_files = %w[README.markdown LICENSE]
  s.rdoc_options = ['--charset=UTF-8', '--main=README.markdown']
 
+ s.required_ruby_version = '>= 1.9.3'
+
  s.add_dependency "jekyll", ">= 1.3"
  s.add_dependency "rack", "~> 1.5"
  s.add_dependency "listen", ">= 1.3"
