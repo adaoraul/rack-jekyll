@@ -27,7 +27,7 @@ Gem::Specification.new do |s|
  s.test_files = Dir.glob("{test,features}/**/*")
  s.require_paths = ["lib"]
 
- s.extra_rdoc_files = ["README.markdown"]
+ s.extra_rdoc_files = %w[README.markdown LICENSE]
  s.rdoc_options = ['--charset=UTF-8', '--main=README.markdown']
 
  s.add_dependency "jekyll", ">= 1.3"
