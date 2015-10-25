@@ -1,9 +1,9 @@
 require "rack"
 require "jekyll"
 
-require File.join(File.dirname(__FILE__), 'jekyll', 'filehandler')
-require File.join(File.dirname(__FILE__), 'jekyll', 'helpers')
-require File.join(File.dirname(__FILE__), 'jekyll', 'version')
+require_relative "jekyll/filehandler"
+require_relative "jekyll/helpers"
+require_relative "jekyll/version"
 
 module Rack
   class Jekyll
