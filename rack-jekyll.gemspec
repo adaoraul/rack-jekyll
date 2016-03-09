@@ -20,6 +20,7 @@ Gem::Specification.new do |s|
              rack-jekyll.gemspec
              Gemfile
              Rakefile
+             History.markdown
              LICENSE
            } +
            Dir.glob("lib/**/*") +
@@ -27,7 +28,7 @@ Gem::Specification.new do |s|
  s.test_files = Dir.glob("{test,features}/**/*")
  s.require_paths = ["lib"]
 
- s.extra_rdoc_files = %w[README.markdown LICENSE]
+ s.extra_rdoc_files = %w[README.markdown History.markdown LICENSE]
  s.rdoc_options = ['--charset=UTF-8', '--main=README.markdown']
 
  s.required_ruby_version = '>= 1.9.3'
