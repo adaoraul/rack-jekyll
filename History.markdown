@@ -1,5 +1,28 @@
 # Rack-Jekyll Release History
 
+## master / 2016-03-09
+
+### Enhancements
+
+  * Drop support of Ruby < 1.9.3
+  * Add release history
+  * Include example/ directory in the gem
+  * Use markdown source files for demo site instead of HTML
+  * Improve demo site pages, CSS, and `_config.yml`
+  * Remove Thorfile
+
+### Bug Fixes
+
+  * Fix wrong HTML tag in default layout of demo site
+
+### Development Fixes
+
+  * Move helper methods into a tested Utils module
+  * Use require_relative
+  * Remove unnecessary require statements
+  * Remove Rack::ShowStatus middleware from demo site
+  * Avoid "unused variable" warning for ruby -w
+
 
 ## 0.4.5 / 2015-11-06
 
