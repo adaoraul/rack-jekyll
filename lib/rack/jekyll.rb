@@ -1,5 +1,6 @@
 require "rack"
 require "jekyll"
+require "thread"
 
 require_relative "jekyll/filehandler"
 require_relative "jekyll/utils"
@@ -8,7 +9,7 @@ require_relative "jekyll/version"
 module Rack
   class Jekyll
 
-    attr_reader :config, :destination
+    attr_reader :config, :destination, :wait_page
 
     # Initializes a new Rack::Jekyll site.
     #
@@ -21,15 +22,18 @@ module Rack
     #
     # +:auto+::        whether to watch for changes and rebuild (default: +false+)
     #
+    # +:wait_page+::   a page to display while pages are rendering (default: "templates/wait.html")
+    #
     # Other options are passed on to Jekyll::Site.
     def initialize(options = {})
       overrides = options.dup
-      @compiling = false
       @force_build = overrides.fetch(:force_build, false)
       @auto        = overrides.fetch(:auto, false)
+      @wait_page   = read_wait_page(overrides)
 
       overrides.delete(:force_build)
       overrides.delete(:auto)
+      overrides.delete(:wait_page)
       @config = ::Jekyll.configuration(overrides)
 
       @destination = @config["destination"]
@@ -57,20 +61,22 @@ module Rack
         ignore_pattern = %r{#{Regexp.escape(relative_path_to_dest)}}
 
         listener = Listen.to(@source, :ignore => ignore_pattern) do |modified, added, removed|
-          t = Time.now.strftime("%Y-%m-%d %H:%M:%S")
-          n = modified.length + added.length + removed.length
-          process("[#{t}] Regenerating: #{n} file(s) changed")
+          unless compiling?
+            t = Time.now.strftime("%Y-%m-%d %H:%M:%S")
+            n = modified.length + added.length + removed.length
+            process("[#{t}] Regenerating: #{n} file(s) changed")
+          end
         end
         listener.start  unless Listen::VERSION =~ /\A[0-1]\./
       end
     end
 
     def call(env)
-      while @compiling
-        sleep 0.1
-      end
-
       request = Rack::Request.new(env)
+
+      while compiling?
+        return serve_wait_page(request)
+      end
 
       filename = @files.get_filename(request.path_info)
 
@@ -100,14 +106,22 @@ module Rack
       request.head? ? remove_body(response) : response
     end
 
+    def compiling?
+      !(@compile_queue.nil? || @compile_queue.empty?)
+    end
+
     private
 
     def process(message = nil)
-      @compiling = true
-      puts message  if message
-      @site.process
-      @files.update
-      @compiling = false
+      puts message if message
+      @compile_queue = Queue.new
+      @compile_queue << '.'
+
+      Thread.new do
+        @site.process
+        @files.update
+        @compile_queue.clear
+      end
     end
 
     def not_found_message
@@ -122,6 +136,26 @@ module Rack
       filename = @files.get_filename("/404.html")
 
       filename ? Utils.file_info(filename)[:body] : nil
+    end
+
+    def read_wait_page(options)
+      path = ::File.expand_path("templates/wait.html", ::File.dirname(__FILE__))
+      if options.key?(:wait_page)
+        if ::File.exist?(options[:wait_page])
+          path = options[:wait_page]
+        else
+          puts "Could not read #{options[:wait_page]}.  Using default."
+        end
+      end
+      ::File.open(path, 'r').read
+    end
+
+    def serve_wait_page(req)
+      headers ||= {}
+      headers['Content-Length'] = @wait_page.bytesize.to_s
+      headers['Content-Type'] = 'text/html'
+      headers['Connection'] = 'keep-alive'
+      [200, headers, [@wait_page]]
     end
 
     def remove_body(response)
