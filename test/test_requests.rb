@@ -84,6 +84,34 @@ describe "when handling requests" do
   end
 
 
+  describe "when the site is compiling" do
+
+    it "should serve a wait page" do
+      begin
+        filename = File.join(@sourcedir, "custom_wait.html")
+        File.open(filename, "w") {|f| f.puts "Custom Wait" }
+
+        jekyll = nil
+        silence_output do
+          # This is a little brittle as the site renders in a separate thread
+          # Theoretically, if the site rendered fast enough, the request
+          # would end up getting actual content instead of the wait page
+          # and this test would fail.
+          jekyll = Rack::Jekyll.new(:force_build => true,
+                                    :source      => @sourcedir,
+                                    :destination => @destdir,
+                                    :wait_page   => filename)
+        end
+        request = Rack::MockRequest.new(jekyll)
+
+        request.get("/index.html").body.must_match %r{Custom Wait}
+      ensure
+        FileUtils.rm(filename)
+      end
+    end
+  end
+
+
   describe "when a directory is requested" do
 
     it "should redirect with status 301 to 'directory/' for 'directory' with index.html" do

@@ -47,6 +47,9 @@ def rack_jekyll(options = {})
   jekyll = nil
   silence_output do
     jekyll = Rack::Jekyll.new(options)
+    while jekyll.compiling?
+      sleep 0.4
+    end
   end
 
   jekyll

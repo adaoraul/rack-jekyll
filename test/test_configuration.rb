@@ -77,6 +77,16 @@ describe "when configuring site" do
       jekyll = rack_jekyll_without_build(:force_build => "ok")
       jekyll.config.wont_include "force_build"
     end
+
+    it ":wait_page is not passed on to Jekyll" do
+      jekyll = rack_jekyll_without_build(:wait_page => "foobar")
+      jekyll.config.wont_include "wait_page"
+    end
+
+    it ":wait_page uses default" do
+      jekyll = rack_jekyll_without_build(:wait_page => "/does/not/exist")
+      jekyll.wait_page.must_match %r{Please try again shortly}
+    end
   end
 
   describe "when initialization options are given and a config file exists" do

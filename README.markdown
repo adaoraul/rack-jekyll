@@ -62,6 +62,7 @@ Additional Rack-Jekyll initialization options:
     :force_build   - whether to always generate the site at startup, even
                      when the destination path is not empty (default: false)
     :auto          - whether to watch for changes and rebuild (default: false)
+    :wait_page     - a page to display while pages are rendering
 
 Note that on read-only filesystems a site build will fail,
 so do not set `:force_build => true` in these cases.
@@ -71,6 +72,22 @@ so do not set `:force_build => true` in these cases.
 
 In your site's root directory you can provide a custom `404.html` file
 with YAML front matter.
+
+
+## Wait page
+
+You can create a custom HTML page to display while Jekyll is rendering the
+site.  Set the `:wait_page` initialization option to point to a file relative
+to the root of your Jekyll project.
+
+*Example:*
+
+    run Rack::Jekyll.new(:wait_page => "hold_on.html")
+
+Note that this page should be self-contained (no links to external CSS
+or JS).  It is also not a bad idea to add a `<meta http-equiv="refresh"
+content="60"/>` to the `head` section so that the page will periodically
+refresh itself and display the site once Jekyll has finished rendering.
 
 
 ## Contributing
