@@ -30,6 +30,7 @@ module Rack
       @force_build = overrides.fetch(:force_build, false)
       @auto        = overrides.fetch(:auto, false)
       @wait_page   = read_wait_page(overrides)
+      @compile_queue = Queue.new
 
       overrides.delete(:force_build)
       overrides.delete(:auto)
@@ -107,14 +108,13 @@ module Rack
     end
 
     def compiling?
-      !(@compile_queue.nil? || @compile_queue.empty?)
+      !@compile_queue.empty?
     end
 
     private
 
     def process(message = nil)
       puts message if message
-      @compile_queue = Queue.new
       @compile_queue << '.'
 
       Thread.new do
