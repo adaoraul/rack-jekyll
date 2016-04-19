@@ -75,7 +75,7 @@ module Rack
     def call(env)
       request = Rack::Request.new(env)
 
-      while compiling?
+      if compiling?
         return serve_wait_page(request)
       end
 
