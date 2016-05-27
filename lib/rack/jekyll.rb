@@ -72,7 +72,12 @@ module Rack
 
       request = Rack::Request.new(env)
 
-      filename = @files.get_filename(request.path_info)
+      uri = request.path_info
+      if (uri.include? "." or uri == "/")
+        filename = @files.get_filename(uri)
+      else
+        filename = @files.get_filename(uri << ".html")
+      end
 
       if filename
         media_type = Utils.media_type(filename)
