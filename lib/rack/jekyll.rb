@@ -73,7 +73,7 @@ module Rack
       request = Rack::Request.new(env)
 
       uri = request.path_info
-      if (uri.include? ".")
+      if (uri.include? "." || uri == "/")
         filename = @files.get_filename(uri)
       else
         filename = @files.get_filename(uri << ".html")
