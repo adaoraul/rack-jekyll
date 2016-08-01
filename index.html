@@ -1,0 +1,157 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Rack-Jekyll by adaoraul</title>
+
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/github-light.css">
+    <meta name="viewport" content="width=device-width">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <h1>Rack-Jekyll</h1>
+        <p>Transform your Jekyll app into Rack application!</p>
+
+        <p class="view"><a href="https://github.com/adaoraul/rack-jekyll">View the Project on GitHub <small>adaoraul/rack-jekyll</small></a></p>
+
+
+        <ul>
+          <li><a href="https://github.com/adaoraul/rack-jekyll/zipball/master">Download <strong>ZIP File</strong></a></li>
+          <li><a href="https://github.com/adaoraul/rack-jekyll/tarball/master">Download <strong>TAR Ball</strong></a></li>
+          <li><a href="https://github.com/adaoraul/rack-jekyll">View On <strong>GitHub</strong></a></li>
+        </ul>
+      </header>
+      <section>
+        <h1>
+<a id="rack-jekyll" class="anchor" href="#rack-jekyll" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Rack-Jekyll</h1>
+
+<p>Transform your <a href="https://jekyllrb.com/">Jekyll</a> app
+into a <a href="https://github.com/rack/rack">Rack</a> application.</p>
+
+<ul>
+<li>You can run it with rackup, <a href="https://github.com/rtomayko/shotgun">shotgun</a>,
+<a href="http://unicorn.bogomips.org/">unicorn</a>, and more.</li>
+<li>You can run Rack-Jekyll with any modified Jekyll.</li>
+<li>You can deploy Rack-Jekyll to Heroku, EC2, Rackspace,
+dedicated servers, VPS, etc.</li>
+</ul>
+
+<h2>
+<a id="how-to-use-it" class="anchor" href="#how-to-use-it" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>How to use it</h2>
+
+<p>A <code>config.ru</code> file is required in order to run with shotgun and rackup.
+You can even deploy your Jekyll app to <a href="https://www.heroku.com/">Heroku</a>!</p>
+
+<p>Copy this into <code>config.ru</code> in your Jekyll site's root directory:</p>
+
+<div class="highlight highlight-source-ruby"><pre><span class="pl-k">require</span> <span class="pl-s"><span class="pl-pds">"</span>rack/jekyll<span class="pl-pds">"</span></span>
+
+run <span class="pl-c1">Rack</span>::<span class="pl-c1">Jekyll</span>.<span class="pl-k">new</span></pre></div>
+
+<p>That's it.</p>
+
+<p>Heroku provides a read-only filesystem, so you need to generate pages
+and git-commit them <em>before</em> you deploy your Jekyll site to Heroku.</p>
+
+<ol>
+<li>
+<code>cd</code> to your Jekyll directory</li>
+<li>add a <code>config.ru</code> file (see example above)</li>
+<li>build pages with <code>jekyll build</code>
+</li>
+<li>add <code>gem "rack-jekyll"</code> to your <code>Gemfile</code>
+</li>
+<li><code>git init &amp;&amp; git add .</code></li>
+<li><code>git commit -m "Initial commit"</code></li>
+<li><code>heroku create</code></li>
+<li><code>git push heroku master</code></li>
+</ol>
+
+<h2>
+<a id="configuration" class="anchor" href="#configuration" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Configuration</h2>
+
+<p>Jekyll configuration options can be specified in a <code>_config.yml</code> file
+or as Rack-Jekyll initialization options in <code>config.ru</code>.</p>
+
+<p>Example:</p>
+
+<div class="highlight highlight-source-ruby"><pre>run <span class="pl-c1">Rack</span>::<span class="pl-c1">Jekyll</span>.<span class="pl-k">new</span>(<span class="pl-c1">:destination</span> =&gt; <span class="pl-s"><span class="pl-pds">"</span>mysite<span class="pl-pds">"</span></span>)</pre></div>
+
+<p>This will set a custom destination path, overriding the default (<code>_site</code>)
+and settings from a config file.</p>
+
+<p>See <a href="https://jekyllrb.com/docs/configuration/">Jekyll's configuration docs</a>
+for more settings.</p>
+
+<p>Additional Rack-Jekyll initialization options:</p>
+
+<pre><code>:config        - use given config file (default: "_config.yml")
+:force_build   - whether to always generate the site at startup, even
+                 when the destination path is not empty (default: false)
+:auto          - whether to watch for changes and rebuild (default: false)
+:wait_page     - a page to display while pages are rendering
+</code></pre>
+
+<p>Note that on read-only filesystems a site build will fail,
+so do not set <code>:force_build =&gt; true</code> in these cases.</p>
+
+<h2>
+<a id="404-page" class="anchor" href="#404-page" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>404 page</h2>
+
+<p>In your site's root directory you can provide a custom <code>404.html</code> file
+with YAML front matter.</p>
+
+<h2>
+<a id="wait-page" class="anchor" href="#wait-page" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Wait page</h2>
+
+<p>You can create a custom HTML page to display while Jekyll is rendering the
+site.  Set the <code>:wait_page</code> initialization option to point to a file relative
+to the root of your Jekyll project.</p>
+
+<p><em>Example:</em></p>
+
+<pre><code>run Rack::Jekyll.new(:wait_page =&gt; "hold_on.html")
+</code></pre>
+
+<p>Note that this page should be self-contained (no links to external CSS
+or JS).  It is also not a bad idea to add a <code>&lt;meta http-equiv="refresh"
+content="60"/&gt;</code> to the <code>head</code> section so that the page will periodically
+refresh itself and display the site once Jekyll has finished rendering.</p>
+
+<h2>
+<a id="contributing" class="anchor" href="#contributing" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Contributing</h2>
+
+<p>Contributions are more than just welcome.
+Fork this repo and create a new branch, then submit a pull request.</p>
+
+<h2>
+<a id="contributors" class="anchor" href="#contributors" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Contributors</h2>
+
+<ul>
+<li>adaoraul (Adão Raul)</li>
+<li>Nerian (Gonzalo Rodríguez-Baltanás Díaz)</li>
+<li>scottwater (Scott Watermasysk)</li>
+<li>thedjinn (Emil Loer)</li>
+<li>bry4n (Bryan Goines)</li>
+<li>thibaudgg (Thibaud Guillaume-Gentil)</li>
+<li>bemurphy (Brendon Murphy)</li>
+<li>imajes (James Cox)</li>
+<li>mattr- (Matt Rogers)</li>
+<li>stomar (Marcus Stollsteimer)</li>
+</ul>
+      </section>
+      <footer>
+        <p>This project is maintained by <a href="https://github.com/adaoraul">adaoraul</a></p>
+        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
+      </footer>
+    </div>
+    <script src="javascripts/scale.fix.js"></script>
+    
+  </body>
+</html>
