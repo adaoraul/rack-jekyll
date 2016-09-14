@@ -109,6 +109,32 @@ describe "when handling requests" do
         FileUtils.rm(filename)
       end
     end
+
+    it "should stop serving a wait page if building fails" do
+      # This test creates a broken site so we create a new test directory structure
+      # so we don't pollute the existing one.
+      Dir.mktmpdir('rack_jekyll_test') do |tempdir|
+        sourcedir = File.join(tempdir, "source")
+        destdir = File.join(tempdir, "_site")
+        FileUtils.cp_r(@sourcedir, tempdir)
+        Dir.mkdir(destdir)
+
+        filename = File.join(sourcedir, "breaks_jekyll.md")
+        File.open(filename, "w") {|f| f.puts "---\nThis is bad yaml\n---\n" }
+
+        jekyll = nil
+        silence_output do
+          jekyll = Rack::Jekyll.new(:force_build => true,
+                                    :source      => sourcedir,
+                                    :destination => destdir,
+                                    :wait_page   => filename)
+        end
+        sleep 3
+        request = Rack::MockRequest.new(jekyll)
+
+        request.get("/index.html").body.must_match %r{Not found}
+      end
+    end
   end
 
 

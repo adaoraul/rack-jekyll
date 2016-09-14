@@ -118,9 +118,15 @@ module Rack
       @compile_queue << '.'
 
       Thread.new do
-        @site.process
-        @files.update
-        @compile_queue.clear
+        begin
+          @site.process
+          @files.update
+        rescue => e
+          puts("Jekyll failed to build: #{e}")
+          puts(e.backtrace.join("\n"))
+        ensure
+          @compile_queue.clear
+        end
       end
     end
 
