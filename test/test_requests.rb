@@ -102,9 +102,12 @@ describe "when handling requests" do
                                     :destination => @destdir,
                                     :wait_page   => filename)
         end
-        request = Rack::MockRequest.new(jekyll)
-
-        request.get("/index.html").body.must_match %r{Custom Wait}
+        unless jekyll.complete?
+          request = Rack::MockRequest.new(jekyll)
+          request.get("/index.html").body.must_match %r{Custom Wait}
+        else
+          skip("Site built too fast to test wait page")
+        end
       ensure
         FileUtils.rm(filename)
       end
@@ -129,7 +132,11 @@ describe "when handling requests" do
                                     :destination => destdir,
                                     :wait_page   => filename)
         end
-        sleep 3
+        jekyll.mutex.synchronize do
+          unless jekyll.complete?
+            jekyll.building_cond.wait(jekyll.mutex)
+          end
+        end
         request = Rack::MockRequest.new(jekyll)
 
         request.get("/index.html").body.must_match %r{Not found}
