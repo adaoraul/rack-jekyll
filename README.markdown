@@ -63,6 +63,7 @@ Additional Rack-Jekyll initialization options:
                      when the destination path is not empty (default: false)
     :auto          - whether to watch for changes and rebuild (default: false)
     :wait_page     - a page to display while pages are rendering
+    :testing       - whether the site is used for testing
 
 Note that on read-only filesystems a site build will fail,
 so do not set `:force_build => true` in these cases.
