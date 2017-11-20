@@ -22,6 +22,8 @@ module Rack
     #
     # +:auto+::        whether to watch for changes and rebuild (default: +false+)
     #
+    # +:testing+::     whether the site is used for testing (default: +false+)
+    #
     # +:wait_page+::   a page to display while pages are rendering (default: "templates/wait.html")
     #
     # Other options are passed on to Jekyll::Site.
@@ -29,6 +31,7 @@ module Rack
       overrides = options.dup
       @force_build = overrides.fetch(:force_build, false)
       @auto        = overrides.fetch(:auto, false)
+      @testing     = overrides.fetch(:testing, false)
       @wait_page   = read_wait_page(overrides)
       @compile_queue = Queue.new
 
@@ -117,11 +120,19 @@ module Rack
       puts message if message
       @compile_queue << '.'
 
-      Thread.new do
-        @site.process
-        @files.update
-        @compile_queue.clear
+      if @testing
+        process_actions
+      else
+        Thread.new do
+          process_actions
+        end
       end
+    end
+
+    def process_actions
+      @site.process
+      @files.update
+      @compile_queue.clear
     end
 
     def not_found_message
