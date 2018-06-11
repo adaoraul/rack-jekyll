@@ -1,7 +1,13 @@
 require 'rake/testtask'
 
 
-task :default => :test
+if ENV["APPRAISAL_INITIALIZED"]
+  task :default => :test
+else
+  require 'appraisal'
+
+  task :default => :appraisal
+end
 
 Rake::TestTask.new do |t|
   t.pattern = 'test/test_*.rb'
