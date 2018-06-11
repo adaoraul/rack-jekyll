@@ -102,11 +102,44 @@ describe "when handling requests" do
                                     :destination => @destdir,
                                     :wait_page   => filename)
         end
-        request = Rack::MockRequest.new(jekyll)
-
-        request.get("/index.html").body.must_match %r{Custom Wait}
+        unless jekyll.complete?
+          request = Rack::MockRequest.new(jekyll)
+          request.get("/index.html").body.must_match %r{Custom Wait}
+        else
+          skip("Site built too fast to test wait page")
+        end
       ensure
         FileUtils.rm(filename)
+      end
+    end
+
+    it "should stop serving a wait page if building fails" do
+      # This test creates a broken site so we create a new test directory structure
+      # so we don't pollute the existing one.
+      Dir.mktmpdir('rack_jekyll_test') do |tempdir|
+        sourcedir = File.join(tempdir, "source")
+        destdir = File.join(tempdir, "_site")
+        FileUtils.cp_r(@sourcedir, tempdir)
+        Dir.mkdir(destdir)
+
+        filename = File.join(sourcedir, "breaks_jekyll.md")
+        File.open(filename, "w") {|f| f.puts "---\nThis is bad yaml\n---\n" }
+
+        jekyll = nil
+        silence_output do
+          jekyll = Rack::Jekyll.new(:force_build => true,
+                                    :source      => sourcedir,
+                                    :destination => destdir,
+                                    :wait_page   => filename)
+        end
+        jekyll.mutex.synchronize do
+          unless jekyll.complete?
+            jekyll.building_cond.wait(jekyll.mutex)
+          end
+        end
+        request = Rack::MockRequest.new(jekyll)
+
+        request.get("/index.html").body.must_match %r{Not found}
       end
     end
   end
