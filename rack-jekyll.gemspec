@@ -34,11 +34,12 @@ Gem::Specification.new do |s|
  s.required_ruby_version = '>= 1.9.3'
 
  s.add_dependency "jekyll", ">= 1.3"
- s.add_dependency "rack", "~> 1.5"
+ s.add_dependency "rack", ">= 1.5"
  s.add_dependency "listen", ">= 1.3"
 
  s.add_development_dependency "rake"
  s.add_development_dependency "minitest"
+ s.add_development_dependency "appraisal"
 
  s.platform = Gem::Platform::RUBY
  s.rubyforge_project = "rack-jekyll"

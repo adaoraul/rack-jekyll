@@ -11,6 +11,16 @@ module Rack
 
     attr_reader :config, :destination, :wait_page
 
+    # Follows the pattern described in
+    # https://emptysqua.re/blog/an-event-synchronization-primitive-for-ruby/
+    attr_reader :mutex, :building_cond
+
+    @complete = false
+
+    def complete?
+      @complete
+    end
+
     # Initializes a new Rack::Jekyll site.
     #
     # Options:
@@ -29,12 +39,13 @@ module Rack
     # Other options are passed on to Jekyll::Site.
     def initialize(options = {})
       overrides = options.dup
+
       @force_build = overrides.fetch(:force_build, false)
       @auto        = overrides.fetch(:auto, false)
       @testing     = overrides.fetch(:testing, false)
       @wait_page   = read_wait_page(overrides)
       @compile_queue = Queue.new
-
+      
       overrides.delete(:force_build)
       overrides.delete(:auto)
       overrides.delete(:wait_page)
@@ -48,6 +59,11 @@ module Rack
 
       if @files.empty? || @force_build
         process("Generating site: #{@source} -> #{@destination}")
+      else
+        mutex.synchronize do
+          @complete = true
+          building_cond.signal
+        end
       end
 
       if @auto
@@ -65,7 +81,7 @@ module Rack
         ignore_pattern = %r{#{Regexp.escape(relative_path_to_dest)}}
 
         listener = Listen.to(@source, :ignore => ignore_pattern) do |modified, added, removed|
-          unless compiling?
+          if complete?
             t = Time.now.strftime("%Y-%m-%d %H:%M:%S")
             n = modified.length + added.length + removed.length
             process("[#{t}] Regenerating: #{n} file(s) changed")
@@ -78,7 +94,7 @@ module Rack
     def call(env)
       request = Rack::Request.new(env)
 
-      while compiling?
+      unless complete?
         return serve_wait_page(request)
       end
 
@@ -110,15 +126,10 @@ module Rack
       request.head? ? remove_body(response) : response
     end
 
-    def compiling?
-      !@compile_queue.empty?
-    end
-
     private
 
     def process(message = nil)
       puts message if message
-      @compile_queue << '.'
 
       if @testing
         process_actions
