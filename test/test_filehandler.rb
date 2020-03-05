@@ -12,7 +12,9 @@ describe Rack::Jekyll::FileHandler do
         "/site/README",
         "/site/dir-with-index/index.html",
         "/site/dir-without-index/page.html",
-        "/site/dir1/dir2/dir3/index.html"
+        "/site/dir1/dir2/dir3/index.html",
+        "/site/spaced file.html",
+        "/site/buenos_días.html"
       ]
       @filehandler = Rack::Jekyll::FileHandler.new("/site", files)
     end
@@ -53,6 +55,22 @@ describe Rack::Jekyll::FileHandler do
 
     it "should return nil for directory without index" do
       @filehandler.get_filename("/dir-without-index").must_be_nil
+    end
+
+    it "should return path for file with a space" do
+      @filehandler.get_filename("/spaced file.html").must_equal "/site/spaced file.html"
+    end
+
+    it "should return path for file with a URL encoded space" do
+      @filehandler.get_filename("/spaced%20file.html").must_equal "/site/spaced file.html"
+    end
+
+    it "should return path for file with a special character" do
+      @filehandler.get_filename("/buenos_días.html").must_equal "/site/buenos_días.html"
+    end
+
+    it "should return path for file with a URL special character" do
+      @filehandler.get_filename("/buenos_d%C3%ADas.html").must_equal "/site/buenos_días.html"
     end
   end
 
