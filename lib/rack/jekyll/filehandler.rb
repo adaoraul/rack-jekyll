@@ -22,7 +22,8 @@ module Rack
       # Returns the full file system path of the file corresponding to
       # the given URL path, or +nil+ if no corresponding file exists.
       def get_filename(path)
-        fullpath = ::File.join(@root, path)
+        url_decoded_path = Rack::Utils.unescape(path)
+        fullpath = ::File.join(@root, url_decoded_path)
 
         if fullpath.end_with?("/")
           normalized = fullpath + "index.html"
