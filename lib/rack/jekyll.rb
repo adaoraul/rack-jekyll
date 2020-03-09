@@ -27,8 +27,8 @@ module Rack
     #
     # +:config+::      use given config file (default: "_config.yml")
     #
-    # +:force_build+:: whether to always generate the site at startup, even
-    #                  when the destination path is not empty (default: +false+)
+    # +:skip_initial_build+:: whether to skip generating the site at startup, even
+    #                         if the destination path is empty (default: +false+)
     #
     # +:auto+::        whether to watch for changes and rebuild (default: +false+)
     #

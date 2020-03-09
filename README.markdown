@@ -58,14 +58,14 @@ for more settings.
 
 Additional Rack-Jekyll initialization options:
 
-    :config        - use given config file (default: "_config.yml")
-    :force_build   - whether to always generate the site at startup, even
-                     when the destination path is not empty (default: false)
-    :auto          - whether to watch for changes and rebuild (default: false)
-    :wait_page     - a page to display while pages are rendering
+    :config               - use given config file (default: "_config.yml")
+    :skip_initial_build   - whether to skip generating the site at startup, even
+                            when the destination path is empty (default: false)
+    :auto                 - whether to watch for changes and rebuild (default: false)
+    :wait_page            - a page to display while pages are rendering
 
 Note that on read-only filesystems a site build will fail,
-so do not set `:force_build => true` in these cases.
+so set `:skip_initial_build => true` in these cases.
 
 
 ## 404 page
