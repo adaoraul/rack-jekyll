@@ -27,19 +27,20 @@ describe "when initializing a Rack::Jekyll instance" do
       FileUtils.touch(@fake_page)
     end
 
-    it "should not build the site by default" do
+    it "should build the site by default" do
       file_wont_exist(@page)
       rack_jekyll(:source      => @sourcedir,
                   :destination => @destdir)
-      file_wont_exist(@page)
+      file_must_exist(@page)
     end
 
-    it "should build the site when :force_build option is set" do
+    it "should build the site unless :skip_initial_build option is set" do
       file_wont_exist(@page)
-      rack_jekyll(:force_build => true,
+      rack_jekyll(:skip_initial_build => true,
                   :source      => @sourcedir,
                   :destination => @destdir)
-      file_must_exist(@page)
+      file_wont_exist(@page)
+
     end
   end
 
