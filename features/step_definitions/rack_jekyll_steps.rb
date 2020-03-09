@@ -6,8 +6,7 @@ Before do
   FileUtils.mkdir_p(SOURCE_DIR)  unless File.exist?(SOURCE_DIR)
   FileUtils.mkdir_p(DEST_DIR)    unless File.exist?(DEST_DIR)
 
-  @jekyll = Rack::Jekyll.new(:force_build => true,
-                             :source      => SOURCE_DIR,
+  @jekyll = Rack::Jekyll.new(:source      => SOURCE_DIR,
                              :destination => DEST_DIR)
 end
 

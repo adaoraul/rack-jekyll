@@ -15,8 +15,7 @@ describe "when handling requests" do
     FileUtils.mkdir_p(@sourcedir)  unless File.exist?(@sourcedir)
     FileUtils.mkdir_p(@destdir)    unless File.exist?(@destdir)
 
-    @jekyll = rack_jekyll(:force_build => true,
-                          :source      => @sourcedir,
+    @jekyll = rack_jekyll(:source      => @sourcedir,
                           :destination => @destdir)
     @request = Rack::MockRequest.new(@jekyll)
   end
@@ -97,8 +96,7 @@ describe "when handling requests" do
           # Theoretically, if the site rendered fast enough, the request
           # would end up getting actual content instead of the wait page
           # and this test would fail.
-          jekyll = Rack::Jekyll.new(:force_build => true,
-                                    :source      => @sourcedir,
+          jekyll = Rack::Jekyll.new(:source      => @sourcedir,
                                     :destination => @destdir,
                                     :wait_page   => filename)
         end
@@ -127,8 +125,7 @@ describe "when handling requests" do
 
         jekyll = nil
         silence_output do
-          jekyll = Rack::Jekyll.new(:force_build => true,
-                                    :source      => sourcedir,
+          jekyll = Rack::Jekyll.new(:source      => sourcedir,
                                     :destination => destdir,
                                     :wait_page   => filename)
         end
@@ -210,8 +207,7 @@ describe "when handling requests" do
         filename = File.join(@sourcedir, "404.html")
         File.open(filename, "w") {|f| f.puts "Custom 404" }
 
-        jekyll = rack_jekyll(:force_build => true,
-                             :source      => @sourcedir,
+        jekyll = rack_jekyll(:source      => @sourcedir,
                              :destination => @destdir)
         request = Rack::MockRequest.new(jekyll)
 

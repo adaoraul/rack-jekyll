@@ -73,9 +73,9 @@ describe "when configuring site" do
       jekyll.config.wont_include "auto"
     end
 
-    it ":force_build is not passed on to Jekyll" do
-      jekyll = rack_jekyll_without_build(:force_build => "ok")
-      jekyll.config.wont_include "force_build"
+    it ":skip_initial_build is not passed on to Jekyll" do
+      jekyll = rack_jekyll_without_build(:skip_initial_build => "ok")
+      jekyll.config.wont_include "skip_initial_build"
     end
 
     it ":wait_page is not passed on to Jekyll" do
