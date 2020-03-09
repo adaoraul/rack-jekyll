@@ -32,17 +32,20 @@ module Rack
     #
     # +:auto+::        whether to watch for changes and rebuild (default: +false+)
     #
+    # +:testing+::     whether the site is used for testing (default: +false+)
+    #
     # +:wait_page+::   a page to display while pages are rendering (default: "templates/wait.html")
     #
     # Other options are passed on to Jekyll::Site.
     def initialize(options = {})
       overrides = options.dup
-      @force_build   = overrides.fetch(:force_build, false)
-      @auto          = overrides.fetch(:auto, false)
-      @wait_page     = read_wait_page(overrides)
-      @mutex         = Mutex.new
-      @building_cond = ConditionVariable.new
 
+      @force_build = overrides.fetch(:force_build, false)
+      @auto        = overrides.fetch(:auto, false)
+      @testing     = overrides.fetch(:testing, false)
+      @wait_page   = read_wait_page(overrides)
+      @compile_queue = Queue.new
+      
       overrides.delete(:force_build)
       overrides.delete(:auto)
       overrides.delete(:wait_page)
@@ -128,21 +131,19 @@ module Rack
     def process(message = nil)
       puts message if message
 
-      Thread.new do
-        begin
-          @site.process
-          @files.update
-          puts "Site build complete"
-        rescue => e
-          puts("Jekyll failed to build: #{e}")
-          puts(e.backtrace.join("\n"))
-        ensure
-          mutex.synchronize do
-            @complete = true
-            building_cond.signal
-          end
+      if @testing
+        process_actions
+      else
+        Thread.new do
+          process_actions
         end
       end
+    end
+
+    def process_actions
+      @site.process
+      @files.update
+      @compile_queue.clear
     end
 
     def not_found_message
