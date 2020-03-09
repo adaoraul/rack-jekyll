@@ -37,13 +37,13 @@ module Rack
     # Other options are passed on to Jekyll::Site.
     def initialize(options = {})
       overrides = options.dup
-      @force_build   = overrides.fetch(:force_build, false)
-      @auto          = overrides.fetch(:auto, false)
-      @wait_page     = read_wait_page(overrides)
-      @mutex         = Mutex.new
-      @building_cond = ConditionVariable.new
+      @skip_initial_build = overrides.fetch(:skip_initial_build, false)
+      @auto               = overrides.fetch(:auto, false)
+      @wait_page          = read_wait_page(overrides)
+      @mutex              = Mutex.new
+      @building_cond      = ConditionVariable.new
 
-      overrides.delete(:force_build)
+      overrides.delete(:skip_initial_build)
       overrides.delete(:auto)
       overrides.delete(:wait_page)
       @config = ::Jekyll.configuration(overrides)
@@ -54,7 +54,7 @@ module Rack
       @files = FileHandler.new(@destination)
       @site = ::Jekyll::Site.new(@config)
 
-      if @files.empty? || @force_build
+      unless @skip_initial_build
         process("Generating site: #{@source} -> #{@destination}")
       else
         mutex.synchronize do
