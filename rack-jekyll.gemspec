@@ -34,7 +34,7 @@ Gem::Specification.new do |s|
  s.required_ruby_version = '>= 1.9.3'
 
  s.add_dependency "jekyll", ">= 1.3"
- s.add_dependency "rack", ">= 1.5"
+ s.add_dependency "rack", ">= 2.1.4"
  s.add_dependency "listen", ">= 1.3"
 
  s.add_development_dependency "rake"
